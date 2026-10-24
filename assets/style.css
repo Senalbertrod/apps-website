@@ -110,13 +110,37 @@ details p { margin: 10px 0 2px; }
   display: block; width: 200px; height: auto; border-radius: 28px;
   border: 1px solid var(--line); background: #000;
 }
-/* Wide screenshots (iPad, iPhone Duo open): one per row on phones, two side by side on big screens */
-.wide-title { font-size: 1.25rem; margin: 28px 0 12px; }
-.wide-gallery { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
-.wide-gallery figure { margin: 0; }
-.wide-gallery img {
-  display: block; width: 100%; height: auto; border-radius: 18px;
-  border: 1px solid var(--line); background: #000;
+/* "See pictures" button on an app page */
+.see-pictures { margin: 20px 0 8px; }
+.button {
+  display: inline-block; font-weight: 600; font-size: 15.5px; text-decoration: none;
+  color: #fff; background: var(--accent); padding: 10px 20px; border-radius: 999px;
 }
-@media (min-width: 700px) { .wide-gallery { grid-template-columns: 1fr 1fr; } }
+.button:hover { filter: brightness(1.08); }
+@media (prefers-color-scheme: dark) { .button { color: #0f1a14; } }
+
+/* Pictures page: one button per device, then that device's pictures */
+.wide-doc { max-width: none; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 24px; }
+.tabs button {
+  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+  color: var(--accent); background: var(--accent-soft); border: 0;
+  padding: 8px 18px; border-radius: 999px;
+}
+.tabs button[aria-selected="true"] { color: #fff; background: var(--accent); }
+@media (prefers-color-scheme: dark) { .tabs button[aria-selected="true"] { color: #0f1a14; } }
+.tabs { display: none; }
+.js .tabs { display: flex; }
+.js .pics h2 { display: none; }
+.pics h2 { margin-top: 28px; }
+.pic-grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.pic-grid figure { margin: 0; }
+.pic-grid img { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: #000; }
+.pic-grid .phone { width: calc(50% - 8px); max-width: 220px; }
+.pic-grid .phone img { border-radius: 26px; }
+.pic-grid .wide { width: 100%; }
+.pic-grid .wide img { border-radius: 18px; }
+.pic-grid .tall { width: calc(50% - 8px); max-width: 360px; }
+.pic-grid .tall img { border-radius: 18px; }
+@media (min-width: 700px) { .pic-grid .wide { width: calc(50% - 8px); } }
 @media (min-width: 900px) { .gallery { justify-content: space-between; overflow-x: visible; margin: 8px 0; padding: 8px 0 16px; } .gallery img { width: 160px; border-radius: 24px; } }

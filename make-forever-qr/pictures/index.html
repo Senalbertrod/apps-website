@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pictures · Make Forever QR Codes</title>
+<meta name="description" content="Pictures of Make Forever QR Codes on each device.">
+<link rel="icon" href="../../assets/img/favicon.png">
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="../../">Apps</a>
+</div></header>
+<main class="wrap">
+<article class="doc wide-doc">
+<p class="crumb"><a href="../">&larr; Make Forever QR Codes</a></p>
+<h1>Make Forever QR Codes Pictures</h1>
+<div class="tabs" role="tablist"><button type="button" role="tab" data-tab="t0" aria-selected="true">iPhone</button><button type="button" role="tab" data-tab="t1" aria-selected="false">iPhone Duo</button><button type="button" role="tab" data-tab="t2" aria-selected="false">iPad</button></div>
+<section class="pics" id="t0" role="tabpanel"><h2>iPhone</h2>
+<div class="pic-grid">
+<figure class="phone"><img src="../../assets/img/make-forever-qr-1-make.jpg" alt="Make a Code: pick a link, contact, Wi-Fi, event and more" width="660" height="1434" loading="lazy"></figure>
+<figure class="phone"><img src="../../assets/img/make-forever-qr-2-link.jpg" alt="Making a link code, with colors and an icon in the middle" width="660" height="1434" loading="lazy"></figure>
+<figure class="phone"><img src="../../assets/img/make-forever-qr-3-scan.jpg" alt="Scanning a printed QR code with the camera" width="660" height="1434" loading="lazy"></figure>
+<figure class="phone"><img src="../../assets/img/make-forever-qr-4-code.jpg" alt="A saved Wi-Fi code with Share, Save Image, Print and more" width="660" height="1434" loading="lazy"></figure>
+<figure class="phone"><img src="../../assets/img/make-forever-qr-5-my-codes.jpg" alt="My Codes, with favorites at the top" width="660" height="1434" loading="lazy"></figure>
+</div></section>
+<section class="pics" id="t1" role="tabpanel"><h2>iPhone Duo</h2>
+<div class="pic-grid">
+<figure class="wide"><img src="../../assets/img/make-forever-qr-duo-0-make.jpg" alt="iPhone Duo open: Make a Code, with five tiles across" width="1400" height="985" loading="lazy"></figure>
+<figure class="wide"><img src="../../assets/img/make-forever-qr-duo-1-my-codes.jpg" alt="iPhone Duo open: your codes on the left, the one you pick big on the right" width="1400" height="985" loading="lazy"></figure>
+<figure class="wide"><img src="../../assets/img/make-forever-qr-duo-2-edit.jpg" alt="iPhone Duo open: making a code, with the code on the left and the settings on the right" width="1400" height="985" loading="lazy"></figure>
+</div></section>
+<section class="pics" id="t2" role="tabpanel"><h2>iPad</h2>
+<div class="pic-grid">
+<figure class="wide"><img src="../../assets/img/make-forever-qr-ipad-1-make.jpg" alt="iPad sideways: Make a Code, with five tiles across" width="1400" height="965" loading="lazy"></figure>
+<figure class="wide"><img src="../../assets/img/make-forever-qr-ipad-2-edit.jpg" alt="iPad sideways: making a code, with the code on the left and the settings on the right" width="1400" height="965" loading="lazy"></figure>
+<figure class="tall"><img src="../../assets/img/make-forever-qr-ipad-0-make-up.jpg" alt="iPad standing up: Make a Code" width="1000" height="1450" loading="lazy"></figure>
+</div></section>
+</article>
+<script>
+// Show one device at a time. (Without this, all of them show, one after another.)
+(function () {
+  var tabs = document.querySelectorAll('.tabs button');
+  var panes = document.querySelectorAll('.pics');
+  function show(id) {
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', t.dataset.tab === id ? 'true' : 'false'); });
+    panes.forEach(function (p) { p.hidden = p.id !== id; });
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.dataset.tab); }); });
+  document.documentElement.classList.add('js');
+  show('t0');
+})();
+</script>
+</main>
+<footer class="site-footer"><div class="wrap">
+<span>&copy; 2026 Senalbert Rodriguez &middot; Florida, United States</span>
+<a href="mailto:support@senalbert.com">support@senalbert.com</a>
+</div></footer>
+</body>
+</html>
