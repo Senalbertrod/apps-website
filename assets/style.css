@@ -110,4 +110,13 @@ details p { margin: 10px 0 2px; }
   display: block; width: 200px; height: auto; border-radius: 28px;
   border: 1px solid var(--line); background: #000;
 }
+/* Wide screenshots (iPad, iPhone Duo open): one per row on phones, two side by side on big screens */
+.wide-title { font-size: 1.25rem; margin: 28px 0 12px; }
+.wide-gallery { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+.wide-gallery figure { margin: 0; }
+.wide-gallery img {
+  display: block; width: 100%; height: auto; border-radius: 18px;
+  border: 1px solid var(--line); background: #000;
+}
+@media (min-width: 700px) { .wide-gallery { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 900px) { .gallery { justify-content: space-between; overflow-x: visible; margin: 8px 0; padding: 8px 0 16px; } .gallery img { width: 160px; border-radius: 24px; } }
