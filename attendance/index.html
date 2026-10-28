@@ -76,7 +76,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 
 /* Picture buttons */
-.pick { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.pick { display: grid; }
 .btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 50px; padding: 0 18px; border-radius: 14px; border: 0;
@@ -149,7 +149,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
 <section class="card" id="picsCard">
   <div class="pick">
     <label class="btn primary" for="file">Choose Pictures</label>
-    <button type="button" class="btn soft" id="paste">Paste</button>
   </div>
   <input type="file" id="file" accept="image/*" multiple hidden>
   <p class="hint" id="picHint">Pick one or two pictures of the Zoom poll. If it scrolls, take one at the top and one at the bottom. Or type the votes below.</p>
@@ -192,7 +191,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   // ---------- Reading a picture ----------
 
   var workerPromise = null;
-  var progress = 0;
+  var progress = 0, stage = 0;
   function getWorker() {
     if (!workerPromise) {
       workerPromise = Tesseract.createWorker('eng', 1, {
@@ -200,7 +199,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
         corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1',
         langPath: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int',
         logger: function (m) {
-          if (m.status === 'recognizing text') { progress = m.progress; showProgress(); }
+          if (m.status === 'recognizing text') { progress = Math.min(0.95, (stage % 3 + m.progress) / 2); showProgress(); }
         }
       }).then(function (w) {
         return w.setParameters({ tessedit_pageseg_mode: '11' }).then(function () { return w; });
@@ -277,7 +276,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     crop.h = Math.min(img.naturalHeight, crop.y + crop.h + padY) - y0;
     crop.x = x0; crop.y = y0;
 
-    var up = Math.min(3, Math.max(1, 1400 / crop.w));
+    var up = Math.min(3, 1000 / crop.w);
     var out = document.createElement('canvas');
     out.width = Math.round(crop.w * up); out.height = Math.round(crop.h * up);
     var ctx = out.getContext('2d', { willReadFrequently: true });
@@ -340,7 +339,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
           var pm = digits(words[i + 1].text).match(/^(\d{1,3})%$/);
           if (pm) pct = parseInt(pm[1], 10);
         }
-        var spot = { pct: pct, y: (bb.y0 + bb.y1) / 2, h: bb.y1 - bb.y0, x: bb.x0 };
+        var spot = { pct: pct, y: (bb.y0 + bb.y1) / 2, h: bb.y1 - bb.y0, x: bb.x0, x1: words[i + 1] && pct != null ? words[i + 1].bbox.x1 : bb.x1 };
         var vm = digits(wt).match(/^\(?(\d{1,3})\s*\/\s*(\d{1,3})\)?(\d{1,3}%)?$/);
         if (vm && wt.indexOf('/') >= 0) {
           if (vm[3]) spot.pct = parseInt(vm[3], 10);
@@ -349,8 +348,9 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
           continue;
         }
         // "(4/24)" sometimes reads as "(4124)": the slash seen as a 1 or 7.
-        var nm = digits(wt).match(/^\((\d{3,6})\)?$/);
-        if (nm && pct != null) { spot.s = nm[1]; noSlash.push(spot); }
+        var nm = digits(wt).match(/^\((\d{3,6})\)?(\d{1,3}%)?$/);
+        if (nm && nm[2]) spot.pct = parseInt(nm[2], 10);
+        if (nm && spot.pct != null) { spot.s = nm[1]; noSlash.push(spot); }
       }
     });
     var total = found.answered != null ? found.answered : +median(found.counts.map(function (c) { return c.b; }));
@@ -447,51 +447,124 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     return result;
   }
 
-  // Cut out a small area, enlarge it 3 times on a white border, and make it
+  // Copy part of a canvas, enlarged k times on a white border. With bw, make it
   // pure black and white so a thin, small number reads clearly.
-  function labelSpot(src, x, y, w, h) {
+  function cutOut(src, x, y, w, h, k, bw) {
     x = Math.max(0, x); y = Math.max(0, y);
     w = Math.min(src.width - x, w); h = Math.min(src.height - y, h);
-    var k = 3, pad = 20;
+    var pad = 16;
     var out = document.createElement('canvas');
     out.width = Math.round(w * k) + pad * 2; out.height = Math.round(h * k) + pad * 2;
     var ctx = out.getContext('2d', { willReadFrequently: true });
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out.width, out.height);
     ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(src, x, y, w, h, pad, pad, Math.round(w * k), Math.round(h * k));
-    var d = ctx.getImageData(0, 0, out.width, out.height), px = d.data;
-    var lo = 255, sum = 0, n = px.length / 4;
-    for (var i = 0; i < px.length; i += 4) { if (px[i] < lo) lo = px[i]; sum += px[i]; }
-    var cut = (lo + sum / n) / 2;
-    for (i = 0; i < px.length; i += 4) { var v = px[i] < cut ? 0 : 255; px[i] = px[i + 1] = px[i + 2] = v; }
-    ctx.putImageData(d, 0, 0);
-    return out;
+    if (bw) {
+      var d = ctx.getImageData(0, 0, out.width, out.height), px = d.data;
+      var lo = 255, sum = 0, n = px.length / 4;
+      for (var i = 0; i < px.length; i += 4) { if (px[i] < lo) lo = px[i]; sum += px[i]; }
+      var cut = (lo + sum / n) / 2;
+      for (i = 0; i < px.length; i += 4) { var v = px[i] < cut ? 0 : 255; px[i] = px[i + 1] = px[i + 2] = v; }
+      ctx.putImageData(d, 0, 0);
+    }
+    return { canvas: out, x: x, y: y, k: k, pad: pad };
   }
 
-  // Read one picture at one angle: first the vote counts, then each row's
-  // choice number by itself (cut out, enlarged, black and white, digits only).
-  function readOnce(worker, img, angle) {
-    var canvas = prepare(img, angle), found;
-    return worker.setParameters({ tessedit_char_whitelist: '', tessedit_pageseg_mode: '11' }).then(function () {
+  // Words found in a cut-out, moved back to the prepared picture's positions.
+  function linesIn(res, cut) {
+    function back(b) {
+      return { x0: cut.x + (b.x0 - cut.pad) / cut.k, x1: cut.x + (b.x1 - cut.pad) / cut.k, y0: cut.y + (b.y0 - cut.pad) / cut.k, y1: cut.y + (b.y1 - cut.pad) / cut.k };
+    }
+    return (res.data.lines || []).map(function (l) {
+      return { text: l.text, bbox: back(l.bbox), words: (l.words || []).map(function (w) { return { text: w.text, bbox: back(w.bbox), confidence: w.confidence }; }) };
+    });
+  }
+
+  function read(worker, canvas, whitelist, mode) {
+    return worker.setParameters({ tessedit_char_whitelist: whitelist, tessedit_pageseg_mode: mode }).then(function () {
       return worker.recognize(canvas);
-    }).then(function (res) {
-      found = readCounts(res.data.lines || []);
-      if (!found.counts.length) return { answered: found.answered, votes: {}, flags: {} };
-      var c = found.counts, lay = layout(c);
-      var left = Math.min.apply(null, c.map(function (x) { return x.x; }));
-      var rowLabels = [];
-      return worker.setParameters({ tessedit_char_whitelist: '0123456789', tessedit_pageseg_mode: '7' }).then(function () {
-        return c.reduce(function (done, x, ci) {
-          return done.then(function () {
-            return worker.recognize(labelSpot(canvas, 0, x.y - lay.spacing * 0.7, left * 0.8, lay.spacing * 0.95));
-          }).then(function (r) {
-            var t = (r.data.text || '').replace(/\s+/g, '');
-            var n = parseInt(t, 10);
-            if (/^\d{1,2}$/.test(t) && n >= 1 && n <= CHOICES && r.data.confidence > 50) rowLabels.push({ ci: ci, n: n });
+    });
+  }
+
+  // Read one picture at one angle, in as few small reads as possible:
+  // 1. the vote counts, from the right part only, with only the characters they use;
+  // 2. the choice numbers, all rows at once: each row's spot cut out, made
+  //    black and white, and stacked into one small picture, digits only;
+  // 3. only if the rows still can't be placed, the "answered" line above them.
+  function readOnce(worker, img, angle, step) {
+    var canvas = prepare(img, angle), W = canvas.width, H = canvas.height, found;
+    var right = cutOut(canvas, W * 0.45, 0, W * 0.55, H, 1, false);
+    step(0);
+    return read(worker, right.canvas, '0123456789()/%', '11').then(function (res) {
+      found = readCounts(linesIn(res, right));
+      // Too few found: maybe the poll isn't where expected. Read the whole picture.
+      if (found.counts.length >= 2) return;
+      return read(worker, canvas, '', '11').then(function (res2) {
+        var all = readCounts(linesIn(res2, { x: 0, y: 0, k: 1, pad: 0 }));
+        if (all.counts.length > found.counts.length) found = all;
+      });
+    }).then(function () {
+      // A line skipped in the middle of the list: read just that line by itself.
+      var c = found.counts;
+      if (c.length < 2) return;
+      var lay = layout(c), left = Math.min.apply(null, c.map(function (x) { return x.x; }));
+      var rightEdge = Math.max.apply(null, c.map(function (x) { return x.x1; }));
+      var missing = [];
+      for (var k = 1; k < c.length; k++) {
+        for (var r = lay.row[k - 1] + 1; r < lay.row[k]; r++) {
+          missing.push(c[k - 1].y + (c[k].y - c[k - 1].y) * (r - lay.row[k - 1]) / (lay.row[k] - lay.row[k - 1]));
+        }
+      }
+      return missing.reduce(function (done, y) {
+        return done.then(function () {
+          var line = cutOut(canvas, left - W * 0.04, y - lay.spacing * 0.4, rightEdge - left + W * 0.06, lay.spacing * 0.8, 2, true);
+          function take(res) {
+            var one = readCounts(linesIn(res, line)).counts[0];
+            if (one) { one.y = y; c.push(one); }
+            return one;
+          }
+          return read(worker, line.canvas, '0123456789()/%', '7').then(take).then(function (one) {
+            if (!one) return read(worker, line.canvas, '0123456789()/%', '6').then(take);
           });
-        }, Promise.resolve());
-      }).then(function () {
-        return placeChoices(found, rowLabels, found.labels);
+        });
+      }, Promise.resolve()).then(function () {
+        c.sort(function (p, q) { return p.y - q.y; });
+      });
+    }).then(function () {
+      var c = found.counts;
+      if (!c.length) return { answered: found.answered, votes: {}, flags: {} };
+      var lay = layout(c), left = Math.min.apply(null, c.map(function (x) { return x.x; }));
+      var spots = c.map(function (x) { return cutOut(canvas, 0, x.y - lay.spacing * 0.7, left * 0.8, lay.spacing * 0.95, 2, true); });
+      var gap = 24, tileH = Math.max.apply(null, spots.map(function (s) { return s.canvas.height; }));
+      var stack = document.createElement('canvas');
+      stack.width = Math.max.apply(null, spots.map(function (s) { return s.canvas.width; }));
+      stack.height = spots.length * (tileH + gap);
+      var sctx = stack.getContext('2d');
+      sctx.fillStyle = '#fff'; sctx.fillRect(0, 0, stack.width, stack.height);
+      spots.forEach(function (s, i) { sctx.drawImage(s.canvas, 0, i * (tileH + gap)); });
+      step(1);
+      return read(worker, stack, '0123456789', '11').then(function (res) {
+        // Each number belongs to the row of the spot it was found in.
+        var best = {};
+        (res.data.words || []).forEach(function (w) {
+          var t = w.text.trim(), n = parseInt(t, 10);
+          var ci = Math.floor(((w.bbox.y0 + w.bbox.y1) / 2) / (tileH + gap));
+          if (!/^\d{1,2}$/.test(t) || n < 1 || n > CHOICES || w.confidence < 50 || ci >= c.length) return;
+          if (!best[ci] || w.confidence > best[ci].conf) best[ci] = { ci: ci, n: n, conf: w.confidence };
+        });
+        var rowLabels = Object.keys(best).map(function (k) { return best[k]; });
+        var result = placeChoices(found, rowLabels, found.labels);
+        if (!result.unsure || found.answeredY != null) return result;
+        // Still unsure: look for the "answered" line just above the first row.
+        var top = cutOut(canvas, 0, Math.max(0, c[0].y - lay.spacing * 3), W, lay.spacing * 2.6, 1, false);
+        step(2);
+        return read(worker, top.canvas, '', '11').then(function (res3) {
+          linesIn(res3, top).forEach(function (l) {
+            if (/answ/i.test(l.text)) found.answeredY = l.bbox.y1;
+            else if (/choice/i.test(l.text) && found.choiceY == null) found.choiceY = l.bbox.y1;
+          });
+          return placeChoices(found, rowLabels, found.labels);
+        });
       });
     });
   }
@@ -502,20 +575,21 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     placed.forEach(function (k) { sum += r.votes[k]; });
     // Fewer votes than answered is fine: the rest may be in the other picture.
     var fits = r.answered == null || sum <= r.answered;
-    return (r.unsure ? 0 : 100) + (fits ? 50 : 0) + placed.length + (sum === r.answered ? 0.5 : 0);
+    var flags = Object.keys(r.flags).length;
+    return (r.unsure ? 0 : 100) + (fits ? 50 : 0) + placed.length - flags * 2 + (sum === r.answered ? 0.5 : 0);
   }
 
-  // If a picture doesn't read cleanly, straighten it a little each way and
-  // read it again, keeping the best reading.
-  var ANGLES = [0, -1.5, 1.5, -3, 3];
+  // Usually one reading is enough. If it isn't clean, straighten the
+  // picture a little each way and read again, keeping the best reading.
+  var ANGLES = [0, -1.5, 1.5];
   function readPicture(pic) {
     return getWorker().then(function (worker) {
       return loadImage(pic.blob).then(function (img) {
         var best = null;
-        return ANGLES.reduce(function (done, angle) {
+        return ANGLES.reduce(function (done, angle, ai) {
           return done.then(function () {
-            if (best && score(best) >= 150 + 6) return;
-            return readOnce(worker, img, angle).then(function (r) {
+            if (best && score(best) >= 150 + 5) return;
+            return readOnce(worker, img, angle, function (s) { stage = ai * 3 + s; }).then(function (r) {
               if (!best || score(r) > score(best)) best = r;
             });
           });
@@ -549,7 +623,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
       pictures.push(pic);
       queue = queue.then(function () {
         if (pictures.indexOf(pic) < 0) return;
-        pic.busy = true; progress = 0; render();
+        pic.busy = true; progress = 0; stage = 0; render();
         return readPicture(pic).catch(function (err) {
           pic.error = navigator.onLine === false
             ? 'Connect to the internet the first time, so the page can get its reading tools.'
@@ -594,7 +668,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     var errs = pictures.filter(function (p) { return p.error; });
     var status = $('status');
     if (busy) {
-      if (!status.querySelector('.bar')) status.innerHTML = '<div>Reading the numbers… The first time takes a little longer.</div><div class="bar"><i></i></div>';
+      if (!status.querySelector('.bar')) status.innerHTML = '<div>Reading the numbers…</div><div class="bar"><i></i></div>';
       showProgress();
     } else {
       status.textContent = errs.length ? errs[errs.length - 1].error : '';
@@ -688,36 +762,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     if (files.length) addPictures(files);
   };
 
-  function pasteFrom(items) {
-    var blobs = [];
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].kind === 'file' && /^image\//.test(items[i].type)) blobs.push(items[i].getAsFile());
-    }
-    if (blobs.length) addPictures(blobs);
-    return blobs.length;
-  }
-  document.addEventListener('paste', function (e) {
-    if (!e.clipboardData) return;
-    if (pasteFrom(e.clipboardData.items)) e.preventDefault();
-  });
-  $('paste').onclick = function () {
-    if (!navigator.clipboard || !navigator.clipboard.read) {
-      $('status').textContent = 'Pasting isn’t available here. Use Choose Pictures instead.';
-      return;
-    }
-    navigator.clipboard.read().then(function (items) {
-      var jobs = [];
-      items.forEach(function (item) {
-        var type = item.types.filter(function (t) { return /^image\//.test(t); })[0];
-        if (type) jobs.push(item.getType(type));
-      });
-      if (!jobs.length) throw new Error('none');
-      return Promise.all(jobs).then(addPictures);
-    }).catch(function () {
-      $('status').textContent = 'There’s no picture to paste. Copy a picture first, or use Choose Pictures.';
-    });
-  };
-
   $('reset').onclick = function () {
     pictures.forEach(function (p) { URL.revokeObjectURL(p.url); });
     clearState();
@@ -727,6 +771,8 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   };
 
   render();
+  // Start getting the reading tools now, so they're ready when a picture is picked.
+  getWorker().catch(function () {});
 })();
 </script>
 </body>
