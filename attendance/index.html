@@ -68,14 +68,10 @@ main {
 }
 button { font: inherit; color: inherit; }
 
-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 header img { width: 40px; height: 40px; border-radius: 22%; }
 header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
 
-/* Pictures / Enter by Hand switch */
-.modes { display: grid; grid-template-columns: 1fr 1fr; background: var(--line); border-radius: 12px; padding: 3px; margin-bottom: 16px; }
-.modes button { border: 0; background: none; padding: 9px 0; border-radius: 9px; font-size: 15px; font-weight: 600; color: var(--muted); }
-.modes button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
 
@@ -150,18 +146,13 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   <h1>Attendance</h1>
 </header>
 
-<div class="modes" role="group" aria-label="How to count">
-  <button type="button" id="modePics" aria-pressed="true">Pictures</button>
-  <button type="button" id="modeHand" aria-pressed="false">Enter by Hand</button>
-</div>
-
 <section class="card" id="picsCard">
   <div class="pick">
     <label class="btn primary" for="file">Choose Pictures</label>
     <button type="button" class="btn soft" id="paste">Paste</button>
   </div>
   <input type="file" id="file" accept="image/*" multiple hidden>
-  <p class="hint" id="picHint">Pick one or two pictures of the Zoom poll. If the poll needs scrolling, take one at the top and one scrolled down to 10. The numbers are read on this iPhone. Nothing is uploaded.</p>
+  <p class="hint" id="picHint">Pick one or two pictures of the Zoom poll. If it scrolls, take one at the top and one at the bottom. Or type the votes below.</p>
   <div class="thumbs" id="thumbs"></div>
   <div class="status" id="status"></div>
 </section>
@@ -197,7 +188,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   clearState();
 
   var $ = function (id) { return document.getElementById(id); };
-  var mode = 'pics';
 
   // ---------- Reading a picture ----------
 
@@ -268,7 +258,8 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   }
 
   // Crop to the poll, enlarge it, and turn it into dark text on white.
-  function prepare(img) {
+  // angle (degrees) straightens a tilted photo.
+  function prepare(img, angle) {
     var scale = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
     var sw = Math.round(img.naturalWidth * scale), sh = Math.round(img.naturalHeight * scale);
     var small = document.createElement('canvas');
@@ -279,17 +270,27 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     var crop = box
       ? { x: box.x / scale, y: box.y / scale, w: box.w / scale, h: box.h / scale }
       : { x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight };
-    var pad = crop.w * 0.02;
-    crop.x = Math.max(0, crop.x - pad); crop.y = Math.max(0, crop.y - pad);
-    crop.w = Math.min(img.naturalWidth - crop.x, crop.w + pad * 2);
-    crop.h = Math.min(img.naturalHeight - crop.y, crop.h + pad * 2);
+    // Extra room at the sides, so a tilted photo doesn't lose the edges.
+    var padX = box ? crop.w * 0.08 : 0, padY = box ? crop.w * 0.02 : 0;
+    var x0 = Math.max(0, crop.x - padX), y0 = Math.max(0, crop.y - padY);
+    crop.w = Math.min(img.naturalWidth, crop.x + crop.w + padX) - x0;
+    crop.h = Math.min(img.naturalHeight, crop.y + crop.h + padY) - y0;
+    crop.x = x0; crop.y = y0;
 
     var up = Math.min(3, Math.max(1, 1400 / crop.w));
     var out = document.createElement('canvas');
     out.width = Math.round(crop.w * up); out.height = Math.round(crop.h * up);
     var ctx = out.getContext('2d', { willReadFrequently: true });
     ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = '#3b3b3b';
+    ctx.fillRect(0, 0, out.width, out.height);
+    if (angle) {
+      ctx.translate(out.width / 2, out.height / 2);
+      ctx.rotate(angle * Math.PI / 180);
+      ctx.translate(-out.width / 2, -out.height / 2);
+    }
     ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     var d = ctx.getImageData(0, 0, out.width, out.height);
     var px = d.data, lo = 255, hi = 0, gray = new Uint8Array(px.length / 4);
     for (var i = 0, p = 0; i < px.length; i += 4, p++) {
@@ -314,7 +315,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
 
   // From the words Tesseract found: how many answered, and each "(2/3) 67%".
   function readCounts(lines) {
-    var found = { answered: null, answeredY: null, counts: [] };
+    var found = { answered: null, answeredY: null, choiceY: null, counts: [] };
     var noSlash = [];
     lines.forEach(function (line) {
       var low = line.text.replace(/\s+/g, ' ').trim().toLowerCase();
@@ -323,12 +324,14 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
         found.answered = parseInt(m[1], 10);
         return;
       }
-      if ((m = low.match(/(\d+)\s*\/\s*(\d+)\s*\(?\d*%?\)?\s*answ/))) {
-        if (found.answered == null) found.answered = parseInt(m[1], 10);
+      if (/answ/.test(low)) {
+        m = low.match(/(\d+)\s*\/\s*(\d+)/);
+        if (m && found.answered == null) found.answered = parseInt(m[1], 10);
         found.answeredY = line.bbox.y1;
         return;
       }
-      if (/question|choice|asist|partic|answ/.test(low)) return;
+      if (/choice/.test(low)) { found.choiceY = line.bbox.y1; return; }
+      if (/question|asist|partic/.test(low)) return;
       var words = line.words || [];
       for (var i = 0; i < words.length; i++) {
         var wt = words[i].text.trim(), bb = words[i].bbox;
@@ -385,23 +388,36 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     return s.length ? s[Math.floor(s.length / 2)] : 0;
   }
 
-  // Each vote count is on its own row. Number the rows from the top, then
-  // use the choice numbers we could read (1 … 10) to know which row is which.
-  function placeChoices(found, labels) {
-    var result = { answered: found.answered, votes: {}, flags: {} };
-    var counts = found.counts;
-    if (!counts.length) return result;
-
+  // Each vote count is on its own row. Number the rows from the top,
+  // leaving a gap where a row's count wasn't read.
+  function layout(counts) {
     var gaps = [];
     for (var k = 1; k < counts.length; k++) gaps.push(counts[k].y - counts[k - 1].y);
     var smallest = gaps.length ? Math.min.apply(null, gaps) : 0;
     var spacing = gaps.length ? median(gaps.filter(function (g) { return g < smallest * 1.5; })) : median(counts.map(function (c) { return c.h; })) * 4.5;
-
     var row = [0];
     for (k = 1; k < counts.length; k++) row.push(row[k - 1] + Math.max(1, Math.round(gaps[k - 1] / spacing)));
+    return { spacing: spacing, row: row };
+  }
 
-    // Which choice is the top row? Every choice number read nearby casts a vote.
+  // Use the choice numbers we could read (1 … 10) to know which row is which.
+  // rowLabels are numbers read right beside a row; labels are ones found elsewhere.
+  function placeChoices(found, rowLabels, labels) {
+    var result = { answered: found.answered, votes: {}, flags: {} };
+    var counts = found.counts;
+    if (!counts.length) return result;
+    var lay = layout(counts), spacing = lay.spacing, row = lay.row;
+
+    // Which choice is the top row? Every choice number read casts a vote.
     var tally = {};
+    rowLabels.forEach(function (l) {
+      var top = l.n - row[l.ci];
+      tally[top] = (tally[top] || 0) + 2;
+    });
+    // The first row right under "answered" (or "Single choice") is choice 1.
+    var head = found.answeredY != null ? found.answeredY : found.choiceY;
+    var reach = found.answeredY != null ? 2.2 : 3.2;
+    if (head != null && counts[0].y > head && counts[0].y - head < spacing * reach) tally[1] = (tally[1] || 0) + 3;
     labels.forEach(function (l) {
       counts.forEach(function (c, ci) {
         if (Math.abs(c.y - l.y) < spacing * 0.5) {
@@ -416,8 +432,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
       if (+t < 1 || +t + lastRow > CHOICES) return;
       if (tally[t] > best) { best = tally[t]; top = +t; }
     });
-    // No choice numbers read: if the "answered" line is just above, the top row is choice 1.
-    if (top == null && found.answeredY != null && counts[0].y - found.answeredY < spacing * 1.8) top = 1;
     if (top == null) { result.unsure = true; return result; }
 
     counts.forEach(function (c, ci) {
@@ -433,42 +447,81 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     return result;
   }
 
+  // Cut out a small area, enlarge it 3 times on a white border, and make it
+  // pure black and white so a thin, small number reads clearly.
+  function labelSpot(src, x, y, w, h) {
+    x = Math.max(0, x); y = Math.max(0, y);
+    w = Math.min(src.width - x, w); h = Math.min(src.height - y, h);
+    var k = 3, pad = 20;
+    var out = document.createElement('canvas');
+    out.width = Math.round(w * k) + pad * 2; out.height = Math.round(h * k) + pad * 2;
+    var ctx = out.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out.width, out.height);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(src, x, y, w, h, pad, pad, Math.round(w * k), Math.round(h * k));
+    var d = ctx.getImageData(0, 0, out.width, out.height), px = d.data;
+    var lo = 255, sum = 0, n = px.length / 4;
+    for (var i = 0; i < px.length; i += 4) { if (px[i] < lo) lo = px[i]; sum += px[i]; }
+    var cut = (lo + sum / n) / 2;
+    for (i = 0; i < px.length; i += 4) { var v = px[i] < cut ? 0 : 255; px[i] = px[i + 1] = px[i + 2] = v; }
+    ctx.putImageData(d, 0, 0);
+    return out;
+  }
+
+  // Read one picture at one angle: first the vote counts, then each row's
+  // choice number by itself (cut out, enlarged, black and white, digits only).
+  function readOnce(worker, img, angle) {
+    var canvas = prepare(img, angle), found;
+    return worker.setParameters({ tessedit_char_whitelist: '', tessedit_pageseg_mode: '11' }).then(function () {
+      return worker.recognize(canvas);
+    }).then(function (res) {
+      found = readCounts(res.data.lines || []);
+      if (!found.counts.length) return { answered: found.answered, votes: {}, flags: {} };
+      var c = found.counts, lay = layout(c);
+      var left = Math.min.apply(null, c.map(function (x) { return x.x; }));
+      var rowLabels = [];
+      return worker.setParameters({ tessedit_char_whitelist: '0123456789', tessedit_pageseg_mode: '7' }).then(function () {
+        return c.reduce(function (done, x, ci) {
+          return done.then(function () {
+            return worker.recognize(labelSpot(canvas, 0, x.y - lay.spacing * 0.7, left * 0.8, lay.spacing * 0.95));
+          }).then(function (r) {
+            var t = (r.data.text || '').replace(/\s+/g, '');
+            var n = parseInt(t, 10);
+            if (/^\d{1,2}$/.test(t) && n >= 1 && n <= CHOICES && r.data.confidence > 50) rowLabels.push({ ci: ci, n: n });
+          });
+        }, Promise.resolve());
+      }).then(function () {
+        return placeChoices(found, rowLabels, found.labels);
+      });
+    });
+  }
+
+  // How good a reading is: rows placed, and whether the votes add up.
+  function score(r) {
+    var placed = Object.keys(r.votes), sum = 0;
+    placed.forEach(function (k) { sum += r.votes[k]; });
+    // Fewer votes than answered is fine: the rest may be in the other picture.
+    var fits = r.answered == null || sum <= r.answered;
+    return (r.unsure ? 0 : 100) + (fits ? 50 : 0) + placed.length + (sum === r.answered ? 0.5 : 0);
+  }
+
+  // If a picture doesn't read cleanly, straighten it a little each way and
+  // read it again, keeping the best reading.
+  var ANGLES = [0, -1.5, 1.5, -3, 3];
   function readPicture(pic) {
     return getWorker().then(function (worker) {
-      var canvas, found;
       return loadImage(pic.blob).then(function (img) {
-        canvas = prepare(img);
-        return worker.setParameters({ tessedit_char_whitelist: '' });
-      }).then(function () {
-        return worker.recognize(canvas);
-      }).then(function (res) {
-        found = readCounts(res.data.lines || []);
-        if (!found.counts.length) return null;
-        // Read the narrow column of choice numbers on the left by itself, digits only.
-        var c = found.counts;
-        var h = median(c.map(function (x) { return x.h; }));
-        var left = Math.min.apply(null, c.map(function (x) { return x.x; }));
-        var y0 = Math.max(0, c[0].y - h * 3), y1 = Math.min(canvas.height, c[c.length - 1].y + h * 2);
-        var x1 = left * 0.8;
-        var strip = document.createElement('canvas');
-        strip.width = Math.round(x1 * 2); strip.height = Math.round((y1 - y0) * 2);
-        var sctx = strip.getContext('2d');
-        sctx.imageSmoothingQuality = 'high';
-        sctx.drawImage(canvas, 0, y0, x1, y1 - y0, 0, 0, strip.width, strip.height);
-        return worker.setParameters({ tessedit_char_whitelist: '0123456789' }).then(function () {
-          return worker.recognize(strip);
-        }).then(function (res2) {
-          var labels = [];
-          (res2.data.words || []).forEach(function (w) {
-            var n = parseInt(w.text, 10);
-            if (/^\d{1,2}$/.test(w.text) && n >= 1 && n <= CHOICES && w.confidence > 40) {
-              labels.push({ n: n, y: y0 + (w.bbox.y0 + w.bbox.y1) / 4 });
-            }
+        var best = null;
+        return ANGLES.reduce(function (done, angle) {
+          return done.then(function () {
+            if (best && score(best) >= 150 + 6) return;
+            return readOnce(worker, img, angle).then(function (r) {
+              if (!best || score(r) > score(best)) best = r;
+            });
           });
-          return labels.concat(found.labels);
+        }, Promise.resolve()).then(function () {
+          pic.result = best;
         });
-      }).then(function (labels) {
-        pic.result = labels ? placeChoices(found, labels) : { answered: found.answered, votes: {}, flags: {} };
       });
     });
   }
@@ -500,7 +553,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
         return readPicture(pic).catch(function (err) {
           pic.error = navigator.onLine === false
             ? 'Connect to the internet the first time, so the page can get its reading tools.'
-            : 'This picture could not be read. Try another one, or Enter by Hand.';
+            : 'This picture could not be read. Try another one, or type the votes below.';
           console.error(err);
         }).then(function () {
           pic.busy = false;
@@ -519,9 +572,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
   }
 
   function render() {
-    $('modePics').setAttribute('aria-pressed', mode === 'pics');
-    $('modeHand').setAttribute('aria-pressed', mode === 'hand');
-    $('picsCard').hidden = mode !== 'pics';
 
     // Thumbnails
     var thumbs = $('thumbs');
@@ -587,7 +637,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
       note.className = flagged[c] ? 'flag' : '';
       note.textContent = flagged[c] ? 'Please check this one'
         : source[c] === 'hand' && seen ? 'Fixed by hand'
-        : mode === 'pics' && seen && !source[c] && !busy ? (full ? 'Not in picture, counted as 0' : 'Not in picture')
+        : seen && !source[c] && !busy ? (full ? 'Not in picture, counted as 0' : 'Not in picture')
         : (votes[c] === 1 ? '1 vote' : votes[c] + ' votes');
       var input = li.querySelector('input');
       if (String(focused) !== String(c)) input.value = votes[c];
@@ -601,9 +651,9 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     var check = $('check');
     var anyFlag = flagged.some(function (f) { return f; });
     var unsure = pictures.some(function (p) { return p.result && p.result.unsure; });
-    if (mode !== 'pics' || !pictures.length || busy) { check.className = 'check'; check.textContent = ''; }
-    else if (!seen && unsure) { check.className = 'check bad'; check.textContent = 'The votes were found, but not the choice numbers next to them. Try a clearer picture, or tap Enter by Hand.'; }
-    else if (!seen) { check.className = 'check bad'; check.textContent = 'No votes were found in the picture. Try a clearer picture, or tap Enter by Hand.'; }
+    if (!pictures.length || busy) { check.className = 'check'; check.textContent = ''; }
+    else if (!seen && unsure) { check.className = 'check bad'; check.textContent = 'The votes were found, but not the choice numbers next to them. Try a clearer picture, or type the votes below.'; }
+    else if (!seen) { check.className = 'check bad'; check.textContent = 'No votes were found in the picture. Try a clearer picture, or type the votes below.'; }
     else if (answered === 0 && counted === 0) { check.className = 'check ok'; check.textContent = 'Nobody has answered the poll yet.'; }
     else if (answered == null) { check.className = 'check warn'; check.textContent = 'Couldn’t read how many people answered. Please check the numbers against Zoom.'; }
     else if (counted < answered) {
@@ -621,7 +671,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
 
   function setVotes(n, v, typing) {
     votes[n] = Math.max(0, Math.min(999, v));
-    source[n] = mode === 'pics' ? 'hand' : null;
+    source[n] = pictures.length ? 'hand' : null;
     flagged[n] = false;
     render();
     if (!typing) {
@@ -647,7 +697,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     return blobs.length;
   }
   document.addEventListener('paste', function (e) {
-    if (mode !== 'pics' || !e.clipboardData) return;
+    if (!e.clipboardData) return;
     if (pasteFrom(e.clipboardData.items)) e.preventDefault();
   });
   $('paste').onclick = function () {
@@ -667,16 +717,6 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
       $('status').textContent = 'There’s no picture to paste. Copy a picture first, or use Choose Pictures.';
     });
   };
-
-  function switchMode(m) {
-    if (m === mode) return;
-    pictures.forEach(function (p) { URL.revokeObjectURL(p.url); });
-    clearState();
-    mode = m;
-    render();
-  }
-  $('modePics').onclick = function () { switchMode('pics'); };
-  $('modeHand').onclick = function () { switchMode('hand'); };
 
   $('reset').onclick = function () {
     pictures.forEach(function (p) { URL.revokeObjectURL(p.url); });
