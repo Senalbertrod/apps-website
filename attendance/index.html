@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Attendance</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Attendance">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon.png" media="(prefers-color-scheme: light)">
+<link rel="icon" href="icons/favicon-dark.png" media="(prefers-color-scheme: dark)">
+<style>
+:root {
+  --bg: #f4f6fa;
+  --surface: #ffffff;
+  --text: #15181d;
+  --muted: #646b76;
+  --line: #e2e6ee;
+  --accent: #1f66d1;
+  --accent-soft: #e3edfc;
+  --on-accent: #ffffff;
+  --ok: #1d8a4e;
+  --ok-soft: #e2f4ea;
+  --warn: #a05a00;
+  --warn-soft: #fdf0dc;
+  --bad: #c0302b;
+  --bad-soft: #fbe4e3;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --surface: #171b22;
+    --text: #eef1f5;
+    --muted: #9aa3af;
+    --line: #262c36;
+    --accent: #6aa8ff;
+    --accent-soft: #16263f;
+    --on-accent: #0d1117;
+    --ok: #4cc983;
+    --ok-soft: #12291c;
+    --warn: #f0b153;
+    --warn-soft: #2e2311;
+    --bad: #ff7b72;
+    --bad-soft: #351716;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+main {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 32px);
+}
+button { font: inherit; color: inherit; }
+
+header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+header img { width: 40px; height: 40px; border-radius: 22%; }
+header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
+
+/* Pictures / Enter by Hand switch */
+.modes { display: grid; grid-template-columns: 1fr 1fr; background: var(--line); border-radius: 12px; padding: 3px; margin-bottom: 16px; }
+.modes button { border: 0; background: none; padding: 9px 0; border-radius: 9px; font-size: 15px; font-weight: 600; color: var(--muted); }
+.modes button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+
+/* Picture buttons */
+.pick { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px; padding: 0 18px; border-radius: 14px; border: 0;
+  font-weight: 600; font-size: 17px; cursor: pointer;
+}
+.btn.primary { background: var(--accent); color: var(--on-accent); }
+.btn.soft { background: var(--accent-soft); color: var(--accent); }
+.btn.plain { background: none; color: var(--accent); min-height: 44px; }
+.hint { color: var(--muted); font-size: 14.5px; margin: 12px 2px 0; }
+.thumbs { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.thumbs:empty { display: none; }
+.thumb { position: relative; width: 76px; }
+.thumb img { width: 76px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); display: block; }
+.thumb .x {
+  position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--surface); background: var(--text); color: var(--surface);
+  font-size: 15px; line-height: 1; padding: 0; cursor: pointer;
+}
+.thumb span { display: block; font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
+.status { margin-top: 12px; font-size: 15px; color: var(--muted); }
+.status:empty { display: none; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+
+/* Total */
+.total { text-align: center; padding: 20px 16px; }
+.total .label { font-size: 15px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.total .num { font-size: 72px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; margin: 4px 0 2px; }
+.total .sub { color: var(--muted); font-size: 15.5px; }
+.check { margin-top: 14px; padding: 11px 14px; border-radius: 12px; font-size: 15px; text-align: left; }
+.check:empty { display: none; }
+.check.ok { background: var(--ok-soft); color: var(--ok); }
+.check.warn { background: var(--warn-soft); color: var(--warn); }
+.check.bad { background: var(--bad-soft); color: var(--bad); }
+
+/* Lines */
+.lines { list-style: none; margin: 0; padding: 0; }
+.lines li { display: grid; grid-template-columns: 1fr auto 64px; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
+.lines li:first-child { border-top: 0; }
+.lines .what { font-variant-numeric: tabular-nums; }
+.lines .what b { font-size: 19px; }
+.lines .what small { display: block; font-size: 13px; color: var(--muted); }
+.lines .what small.flag { color: var(--warn); font-weight: 600; }
+.lines li.zero .what, .lines li.zero .eq { opacity: .45; }
+.lines .eq { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.step { display: flex; align-items: center; background: var(--bg); border-radius: 12px; }
+.step button { width: 42px; height: 42px; border: 0; background: none; font-size: 24px; line-height: 1; color: var(--accent); cursor: pointer; }
+.step input {
+  width: 46px; height: 42px; border: 0; background: none; text-align: center;
+  font-family: inherit; font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text);
+  border-radius: 8px;
+}
+.step input:focus { outline: 2px solid var(--accent); background: var(--surface); }
+.lines li.flagged .step { box-shadow: inset 0 0 0 2px var(--warn); }
+.cardhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.cardhead h2 { font-size: 17px; margin: 0; }
+.cardhead span { font-size: 13.5px; color: var(--muted); }
+
+.reset { width: 100%; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img src="icons/apple-touch-icon.png" alt="">
+  <h1>Attendance</h1>
+</header>
+
+<div class="modes" role="group" aria-label="How to count">
+  <button type="button" id="modePics" aria-pressed="true">Pictures</button>
+  <button type="button" id="modeHand" aria-pressed="false">Enter by Hand</button>
+</div>
+
+<section class="card" id="picsCard">
+  <div class="pick">
+    <label class="btn primary" for="file">Choose Pictures</label>
+    <button type="button" class="btn soft" id="paste">Paste</button>
+  </div>
+  <input type="file" id="file" accept="image/*" multiple hidden>
+  <p class="hint" id="picHint">Pick one or two pictures of the Zoom poll. If the poll needs scrolling, take one at the top and one scrolled down to 10. The numbers are read on this iPhone. Nothing is uploaded.</p>
+  <div class="thumbs" id="thumbs"></div>
+  <div class="status" id="status"></div>
+</section>
+
+<section class="card total" id="totalCard">
+  <div class="label">Total</div>
+  <div class="num" id="total">0</div>
+  <div class="sub" id="sub">No votes yet</div>
+  <div class="check" id="check"></div>
+</section>
+
+<section class="card" id="linesCard">
+  <div class="cardhead"><h2>Votes</h2><span>Tap a number to fix it</span></div>
+  <ul class="lines" id="lines"></ul>
+</section>
+
+<button type="button" class="btn plain reset" id="reset">New Count</button>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script>
+(function () {
+  var CHOICES = 10;
+
+  // What's on screen right now. Nothing is saved anywhere.
+  var votes, source, flagged, answered, pictures;
+  function clearState() {
+    votes = []; source = []; flagged = [];
+    for (var c = 1; c <= CHOICES; c++) { votes[c] = 0; source[c] = null; flagged[c] = false; }
+    answered = null;
+    pictures = [];
+  }
+  clearState();
+
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = 'pics';
+
+  // ---------- Reading a picture ----------
+
+  var workerPromise = null;
+  var progress = 0;
+  function getWorker() {
+    if (!workerPromise) {
+      workerPromise = Tesseract.createWorker('eng', 1, {
+        workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
+        corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1',
+        langPath: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int',
+        logger: function (m) {
+          if (m.status === 'recognizing text') { progress = m.progress; showProgress(); }
+        }
+      }).then(function (w) {
+        return w.setParameters({ tessedit_pageseg_mode: '11' }).then(function () { return w; });
+      });
+      workerPromise.catch(function () { workerPromise = null; });
+    }
+    return workerPromise;
+  }
+
+  function loadImage(blob) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error('That file could not be opened as a picture.')); };
+      img.src = URL.createObjectURL(blob);
+    });
+  }
+
+  // Find the dark gray Zoom poll window inside a photo of the screen,
+  // so the colorful video tiles around it don't confuse the reading.
+  function findPollWindow(ctx, w, h) {
+    var data = ctx.getImageData(0, 0, w, h).data;
+    var mask = new Uint8Array(w * h);
+    for (var i = 0, p = 0; p < w * h; i += 4, p++) {
+      var r = data[i], g = data[i + 1], b = data[i + 2];
+      var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+      var lum = (r + g + b) / 3;
+      mask[p] = (lum > 30 && lum < 105 && mx - mn < 24) ? 1 : 0;
+    }
+    function band(counts, total, need) {
+      var best = [0, -1], start = -1, gap = 0;
+      for (var k = 0; k <= counts.length; k++) {
+        var on = k < counts.length && counts[k] / total > need;
+        if (on) { if (start < 0) start = k; gap = 0; }
+        else if (start >= 0) {
+          gap++;
+          if (gap > counts.length * 0.02 || k === counts.length) {
+            var end = k - gap;
+            if (end - start > best[1] - best[0]) best = [start, end];
+            start = -1; gap = 0;
+          }
+        }
+      }
+      return best;
+    }
+    var rows = new Array(h).fill(0);
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) rows[y] += mask[y * w + x];
+    var rb = band(rows, w, 0.18);
+    if (rb[1] - rb[0] < h * 0.15) return null;
+    var cols = new Array(w).fill(0);
+    for (y = rb[0]; y <= rb[1]; y++) for (x = 0; x < w; x++) cols[x] += mask[y * w + x];
+    var cb = band(cols, rb[1] - rb[0] + 1, 0.5);
+    if (cb[1] - cb[0] < w * 0.15) return null;
+    return { x: cb[0], y: rb[0], w: cb[1] - cb[0] + 1, h: rb[1] - rb[0] + 1 };
+  }
+
+  // Crop to the poll, enlarge it, and turn it into dark text on white.
+  function prepare(img) {
+    var scale = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
+    var sw = Math.round(img.naturalWidth * scale), sh = Math.round(img.naturalHeight * scale);
+    var small = document.createElement('canvas');
+    small.width = sw; small.height = sh;
+    var sctx = small.getContext('2d', { willReadFrequently: true });
+    sctx.drawImage(img, 0, 0, sw, sh);
+    var box = findPollWindow(sctx, sw, sh);
+    var crop = box
+      ? { x: box.x / scale, y: box.y / scale, w: box.w / scale, h: box.h / scale }
+      : { x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight };
+    var pad = crop.w * 0.02;
+    crop.x = Math.max(0, crop.x - pad); crop.y = Math.max(0, crop.y - pad);
+    crop.w = Math.min(img.naturalWidth - crop.x, crop.w + pad * 2);
+    crop.h = Math.min(img.naturalHeight - crop.y, crop.h + pad * 2);
+
+    var up = Math.min(3, Math.max(1, 1400 / crop.w));
+    var out = document.createElement('canvas');
+    out.width = Math.round(crop.w * up); out.height = Math.round(crop.h * up);
+    var ctx = out.getContext('2d', { willReadFrequently: true });
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);
+    var d = ctx.getImageData(0, 0, out.width, out.height);
+    var px = d.data, lo = 255, hi = 0, gray = new Uint8Array(px.length / 4);
+    for (var i = 0, p = 0; i < px.length; i += 4, p++) {
+      var v = 255 - (px[i] * 0.3 + px[i + 1] * 0.59 + px[i + 2] * 0.11);
+      gray[p] = v;
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
+    }
+    var span = Math.max(1, hi - lo);
+    for (i = 0, p = 0; i < px.length; i += 4, p++) {
+      var s = (gray[p] - lo) * 255 / span;
+      px[i] = px[i + 1] = px[i + 2] = s; px[i + 3] = 255;
+    }
+    ctx.putImageData(d, 0, 0);
+    return out;
+  }
+
+  // Common misreads of digits in this kind of text.
+  function digits(s) {
+    return s.replace(/[Oo]/g, '0').replace(/[lI|!\]]/g, '1').replace(/[Ss]/g, '5').replace(/[Zz]/g, '2').replace(/B/g, '8');
+  }
+
+  // From the words Tesseract found: how many answered, and each "(2/3) 67%".
+  function readCounts(lines) {
+    var found = { answered: null, answeredY: null, counts: [] };
+    var noSlash = [];
+    lines.forEach(function (line) {
+      var low = line.text.replace(/\s+/g, ' ').trim().toLowerCase();
+      var m;
+      if ((m = low.match(/(\d+)\s*of\s*(\d+)\s*\(?\d*%?\)?\s*partic/))) {
+        found.answered = parseInt(m[1], 10);
+        return;
+      }
+      if ((m = low.match(/(\d+)\s*\/\s*(\d+)\s*\(?\d*%?\)?\s*answ/))) {
+        if (found.answered == null) found.answered = parseInt(m[1], 10);
+        found.answeredY = line.bbox.y1;
+        return;
+      }
+      if (/question|choice|asist|partic|answ/.test(low)) return;
+      var words = line.words || [];
+      for (var i = 0; i < words.length; i++) {
+        var wt = words[i].text.trim(), bb = words[i].bbox;
+        var pct = null;
+        if (words[i + 1]) {
+          var pm = digits(words[i + 1].text).match(/^(\d{1,3})%$/);
+          if (pm) pct = parseInt(pm[1], 10);
+        }
+        var spot = { pct: pct, y: (bb.y0 + bb.y1) / 2, h: bb.y1 - bb.y0, x: bb.x0 };
+        var vm = digits(wt).match(/^\(?(\d{1,3})\s*\/\s*(\d{1,3})\)?(\d{1,3}%)?$/);
+        if (vm && wt.indexOf('/') >= 0) {
+          if (vm[3]) spot.pct = parseInt(vm[3], 10);
+          spot.a = parseInt(vm[1], 10); spot.b = parseInt(vm[2], 10);
+          found.counts.push(spot);
+          continue;
+        }
+        // "(4/24)" sometimes reads as "(4124)": the slash seen as a 1 or 7.
+        var nm = digits(wt).match(/^\((\d{3,6})\)?$/);
+        if (nm && pct != null) { spot.s = nm[1]; noSlash.push(spot); }
+      }
+    });
+    var total = found.answered != null ? found.answered : +median(found.counts.map(function (c) { return c.b; }));
+    // The slash may be read as a 1 or a 7, or dropped; the percent tells which.
+    noSlash.forEach(function (spot) {
+      var best = null;
+      ['1', '7', ''].forEach(function (sep) {
+        var tail = sep + total;
+        if (!total || spot.s.length <= tail.length || spot.s.slice(-tail.length) !== tail) return;
+        var a = parseInt(spot.s.slice(0, -tail.length), 10);
+        var off = Math.abs(Math.round(a * 100 / total) - spot.pct);
+        if (a <= total && off <= 1 && (!best || off < best.off)) best = { a: a, off: off };
+      });
+      if (best) { spot.a = best.a; spot.b = total; found.counts.push(spot); }
+    });
+    found.counts.sort(function (p, q) { return p.y - q.y; });
+    // Choice numbers this pass could read: plain digits, left of the counts.
+    found.labels = [];
+    if (found.counts.length) {
+      var left = Math.min.apply(null, found.counts.map(function (c) { return c.x; }));
+      lines.forEach(function (line) {
+        (line.words || []).forEach(function (w) {
+          var n = parseInt(w.text, 10);
+          if (/^\d{1,2}$/.test(w.text.trim()) && n >= 1 && n <= CHOICES && w.bbox.x1 < left * 0.8) {
+            found.labels.push({ n: n, y: (w.bbox.y0 + w.bbox.y1) / 2 });
+          }
+        });
+      });
+    }
+    return found;
+  }
+
+  function median(list) {
+    var s = list.slice().sort(function (p, q) { return p - q; });
+    return s.length ? s[Math.floor(s.length / 2)] : 0;
+  }
+
+  // Each vote count is on its own row. Number the rows from the top, then
+  // use the choice numbers we could read (1 … 10) to know which row is which.
+  function placeChoices(found, labels) {
+    var result = { answered: found.answered, votes: {}, flags: {} };
+    var counts = found.counts;
+    if (!counts.length) return result;
+
+    var gaps = [];
+    for (var k = 1; k < counts.length; k++) gaps.push(counts[k].y - counts[k - 1].y);
+    var smallest = gaps.length ? Math.min.apply(null, gaps) : 0;
+    var spacing = gaps.length ? median(gaps.filter(function (g) { return g < smallest * 1.5; })) : median(counts.map(function (c) { return c.h; })) * 4.5;
+
+    var row = [0];
+    for (k = 1; k < counts.length; k++) row.push(row[k - 1] + Math.max(1, Math.round(gaps[k - 1] / spacing)));
+
+    // Which choice is the top row? Every choice number read nearby casts a vote.
+    var tally = {};
+    labels.forEach(function (l) {
+      counts.forEach(function (c, ci) {
+        if (Math.abs(c.y - l.y) < spacing * 0.5) {
+          var top = l.n - row[ci];
+          tally[top] = (tally[top] || 0) + 1;
+        }
+      });
+    });
+    var top = null, best = 0, lastRow = row[row.length - 1];
+    Object.keys(tally).forEach(function (t) {
+      // The rows have to fit inside choices 1 … 10.
+      if (+t < 1 || +t + lastRow > CHOICES) return;
+      if (tally[t] > best) { best = tally[t]; top = +t; }
+    });
+    // No choice numbers read: if the "answered" line is just above, the top row is choice 1.
+    if (top == null && found.answeredY != null && counts[0].y - found.answeredY < spacing * 1.8) top = 1;
+    if (top == null) { result.unsure = true; return result; }
+
+    counts.forEach(function (c, ci) {
+      var n = top + row[ci];
+      if (n < 1 || n > CHOICES) return;
+      result.votes[n] = c.a;
+      // The percent should match the votes. If not, ask for a check.
+      if (c.pct != null && c.b > 0 && Math.abs(Math.round(c.a * 100 / c.b) - c.pct) > 1) result.flags[n] = true;
+      if (c.a > c.b) result.flags[n] = true;
+    });
+
+    if (result.answered == null) result.answered = +median(counts.map(function (c) { return c.b; }));
+    return result;
+  }
+
+  function readPicture(pic) {
+    return getWorker().then(function (worker) {
+      var canvas, found;
+      return loadImage(pic.blob).then(function (img) {
+        canvas = prepare(img);
+        return worker.setParameters({ tessedit_char_whitelist: '' });
+      }).then(function () {
+        return worker.recognize(canvas);
+      }).then(function (res) {
+        found = readCounts(res.data.lines || []);
+        if (!found.counts.length) return null;
+        // Read the narrow column of choice numbers on the left by itself, digits only.
+        var c = found.counts;
+        var h = median(c.map(function (x) { return x.h; }));
+        var left = Math.min.apply(null, c.map(function (x) { return x.x; }));
+        var y0 = Math.max(0, c[0].y - h * 3), y1 = Math.min(canvas.height, c[c.length - 1].y + h * 2);
+        var x1 = left * 0.8;
+        var strip = document.createElement('canvas');
+        strip.width = Math.round(x1 * 2); strip.height = Math.round((y1 - y0) * 2);
+        var sctx = strip.getContext('2d');
+        sctx.imageSmoothingQuality = 'high';
+        sctx.drawImage(canvas, 0, y0, x1, y1 - y0, 0, 0, strip.width, strip.height);
+        return worker.setParameters({ tessedit_char_whitelist: '0123456789' }).then(function () {
+          return worker.recognize(strip);
+        }).then(function (res2) {
+          var labels = [];
+          (res2.data.words || []).forEach(function (w) {
+            var n = parseInt(w.text, 10);
+            if (/^\d{1,2}$/.test(w.text) && n >= 1 && n <= CHOICES && w.confidence > 40) {
+              labels.push({ n: n, y: y0 + (w.bbox.y0 + w.bbox.y1) / 4 });
+            }
+          });
+          return labels.concat(found.labels);
+        });
+      }).then(function (labels) {
+        pic.result = labels ? placeChoices(found, labels) : { answered: found.answered, votes: {}, flags: {} };
+      });
+    });
+  }
+
+  // Put the readings from all pictures together, one count per choice.
+  function combine() {
+    for (var c = 1; c <= CHOICES; c++) { votes[c] = 0; source[c] = null; flagged[c] = false; }
+    answered = null;
+    pictures.forEach(function (pic) {
+      var r = pic.result;
+      if (!r) return;
+      if (r.answered != null) answered = Math.max(answered || 0, r.answered);
+      Object.keys(r.votes).forEach(function (k) {
+        var n = +k, v = r.votes[k], f = !!r.flags[k];
+        if (source[n] == null || (flagged[n] && !f)) { votes[n] = v; flagged[n] = f; source[n] = 'pic'; }
+        else if (votes[n] !== v && !f) flagged[n] = true;
+      });
+    });
+  }
+
+  var queue = Promise.resolve();
+  function addPictures(blobs) {
+    blobs.forEach(function (blob) {
+      var pic = { blob: blob, url: URL.createObjectURL(blob), result: null };
+      pictures.push(pic);
+      queue = queue.then(function () {
+        if (pictures.indexOf(pic) < 0) return;
+        pic.busy = true; progress = 0; render();
+        return readPicture(pic).catch(function (err) {
+          pic.error = navigator.onLine === false
+            ? 'Connect to the internet the first time, so the page can get its reading tools.'
+            : 'This picture could not be read. Try another one, or Enter by Hand.';
+          console.error(err);
+        }).then(function () {
+          pic.busy = false;
+          combine(); render();
+        });
+      });
+    });
+    render();
+  }
+
+  // ---------- Screen ----------
+
+  function showProgress() {
+    var el = $('status').querySelector('.bar i');
+    if (el) el.style.width = Math.round(progress * 100) + '%';
+  }
+
+  function render() {
+    $('modePics').setAttribute('aria-pressed', mode === 'pics');
+    $('modeHand').setAttribute('aria-pressed', mode === 'hand');
+    $('picsCard').hidden = mode !== 'pics';
+
+    // Thumbnails
+    var thumbs = $('thumbs');
+    thumbs.innerHTML = '';
+    pictures.forEach(function (pic, i) {
+      var t = document.createElement('div');
+      t.className = 'thumb';
+      t.innerHTML = '<img alt=""><button type="button" class="x" aria-label="Remove picture">×</button><span></span>';
+      t.querySelector('img').src = pic.url;
+      t.querySelector('span').textContent = pic.busy ? 'Reading…' : pic.error ? 'Not read' : pic.result ? 'Read' : 'Waiting';
+      t.querySelector('.x').onclick = function () {
+        pictures.splice(i, 1);
+        URL.revokeObjectURL(pic.url);
+        combine(); render();
+      };
+      thumbs.appendChild(t);
+    });
+
+    var busy = pictures.some(function (p) { return p.busy; });
+    var errs = pictures.filter(function (p) { return p.error; });
+    var status = $('status');
+    if (busy) {
+      if (!status.querySelector('.bar')) status.innerHTML = '<div>Reading the numbers… The first time takes a little longer.</div><div class="bar"><i></i></div>';
+      showProgress();
+    } else {
+      status.textContent = errs.length ? errs[errs.length - 1].error : '';
+    }
+
+    // Lines
+    var list = $('lines');
+    var total = 0, counted = 0;
+    var seen = false;
+    for (var c = 1; c <= CHOICES; c++) { if (source[c]) seen = true; }
+    for (c = 1; c <= CHOICES; c++) { total += c * votes[c]; counted += votes[c]; }
+    var full = answered != null && counted === answered;
+    var focused = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.choice;
+    for (c = 1; c <= CHOICES; c++) {
+      var li = list.children[c - 1];
+      if (!li) {
+        li = document.createElement('li');
+        li.innerHTML = '<div class="what"><b></b><small></small></div>' +
+          '<div class="step"><button type="button" aria-label="One less">−</button>' +
+          '<input inputmode="numeric" pattern="[0-9]*" autocomplete="off"><button type="button" aria-label="One more">+</button></div>' +
+          '<div class="eq"></div>';
+        (function (n, li) {
+          var input = li.querySelector('input');
+          input.dataset.choice = n;
+          input.setAttribute('aria-label', 'Votes for choice ' + n);
+          li.querySelectorAll('button')[0].onclick = function () { setVotes(n, votes[n] - 1); };
+          li.querySelectorAll('button')[1].onclick = function () { setVotes(n, votes[n] + 1); };
+          input.onfocus = function () { input.select(); };
+          input.oninput = function () {
+            var v = parseInt(input.value.replace(/\D/g, ''), 10);
+            setVotes(n, isNaN(v) ? 0 : v, true);
+          };
+          input.onblur = function () { render(); };
+        })(c, li);
+        list.appendChild(li);
+      }
+      li.className = (votes[c] ? '' : 'zero') + (flagged[c] ? ' flagged' : '');
+      li.querySelector('b').textContent = c + ' × ' + votes[c];
+      var note = li.querySelector('small');
+      note.className = flagged[c] ? 'flag' : '';
+      note.textContent = flagged[c] ? 'Please check this one'
+        : source[c] === 'hand' && seen ? 'Fixed by hand'
+        : mode === 'pics' && seen && !source[c] && !busy ? (full ? 'Not in picture, counted as 0' : 'Not in picture')
+        : (votes[c] === 1 ? '1 vote' : votes[c] + ' votes');
+      var input = li.querySelector('input');
+      if (String(focused) !== String(c)) input.value = votes[c];
+      li.querySelector('.eq').textContent = '= ' + c * votes[c];
+    }
+
+    // Total and the check against Zoom
+    $('total').textContent = total;
+    var people = counted === 1 ? '1 person voted' : counted + ' people voted';
+    $('sub').textContent = answered != null ? people + ' · Zoom says ' + answered + ' answered' : counted ? people : 'No votes yet';
+    var check = $('check');
+    var anyFlag = flagged.some(function (f) { return f; });
+    var unsure = pictures.some(function (p) { return p.result && p.result.unsure; });
+    if (mode !== 'pics' || !pictures.length || busy) { check.className = 'check'; check.textContent = ''; }
+    else if (!seen && unsure) { check.className = 'check bad'; check.textContent = 'The votes were found, but not the choice numbers next to them. Try a clearer picture, or tap Enter by Hand.'; }
+    else if (!seen) { check.className = 'check bad'; check.textContent = 'No votes were found in the picture. Try a clearer picture, or tap Enter by Hand.'; }
+    else if (answered === 0 && counted === 0) { check.className = 'check ok'; check.textContent = 'Nobody has answered the poll yet.'; }
+    else if (answered == null) { check.className = 'check warn'; check.textContent = 'Couldn’t read how many people answered. Please check the numbers against Zoom.'; }
+    else if (counted < answered) {
+      var miss = answered - counted;
+      check.className = 'check warn';
+      check.textContent = (miss === 1 ? '1 vote is' : miss + ' votes are') + ' missing. Add the other picture (scrolled down to 10), or enter the missing votes below.';
+    }
+    else if (counted > answered) { check.className = 'check bad'; check.textContent = 'There are more votes than people who answered. Please check the numbers.'; }
+    else {
+      var allCounted = answered === 1 ? 'The 1 vote is counted' : 'All ' + answered + ' votes are counted';
+      if (anyFlag) { check.className = 'check warn'; check.textContent = allCounted + ', but please check the marked line.'; }
+      else { check.className = 'check ok'; check.textContent = '✓ ' + allCounted + '.'; }
+    }
+  }
+
+  function setVotes(n, v, typing) {
+    votes[n] = Math.max(0, Math.min(999, v));
+    source[n] = mode === 'pics' ? 'hand' : null;
+    flagged[n] = false;
+    render();
+    if (!typing) {
+      var input = $('lines').children[n - 1].querySelector('input');
+      input.value = votes[n];
+    }
+  }
+
+  // ---------- Buttons ----------
+
+  $('file').onchange = function () {
+    var files = Array.prototype.slice.call(this.files || []);
+    this.value = '';
+    if (files.length) addPictures(files);
+  };
+
+  function pasteFrom(items) {
+    var blobs = [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].kind === 'file' && /^image\//.test(items[i].type)) blobs.push(items[i].getAsFile());
+    }
+    if (blobs.length) addPictures(blobs);
+    return blobs.length;
+  }
+  document.addEventListener('paste', function (e) {
+    if (mode !== 'pics' || !e.clipboardData) return;
+    if (pasteFrom(e.clipboardData.items)) e.preventDefault();
+  });
+  $('paste').onclick = function () {
+    if (!navigator.clipboard || !navigator.clipboard.read) {
+      $('status').textContent = 'Pasting isn’t available here. Use Choose Pictures instead.';
+      return;
+    }
+    navigator.clipboard.read().then(function (items) {
+      var jobs = [];
+      items.forEach(function (item) {
+        var type = item.types.filter(function (t) { return /^image\//.test(t); })[0];
+        if (type) jobs.push(item.getType(type));
+      });
+      if (!jobs.length) throw new Error('none');
+      return Promise.all(jobs).then(addPictures);
+    }).catch(function () {
+      $('status').textContent = 'There’s no picture to paste. Copy a picture first, or use Choose Pictures.';
+    });
+  };
+
+  function switchMode(m) {
+    if (m === mode) return;
+    pictures.forEach(function (p) { URL.revokeObjectURL(p.url); });
+    clearState();
+    mode = m;
+    render();
+  }
+  $('modePics').onclick = function () { switchMode('pics'); };
+  $('modeHand').onclick = function () { switchMode('hand'); };
+
+  $('reset').onclick = function () {
+    pictures.forEach(function (p) { URL.revokeObjectURL(p.url); });
+    clearState();
+    $('status').textContent = '';
+    render();
+    window.scrollTo(0, 0);
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>

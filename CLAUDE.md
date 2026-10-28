@@ -2,8 +2,8 @@
 
 Senalbert's app website, served by GitHub Pages (CNAME apps.senalbert.com). Plain HTML: `index.html`, one folder per app (support pages), `assets/`. Footer has the QR Code trademark line. Always show new pictures before uploading them.
 
-### Planned: Attendance (`/attendance`)
-A hidden, standalone page (not on the menu, `noindex`, no links back to the main site). Used on iPhone in Safari, by Senalbert and friends; can be added to the Home Screen and opens full screen. Pick one or two Zoom poll screenshots (or paste), or Enter by Hand with − / + for choices 1 to 10. Total = sum of (choice × votes), counting only people who answered. Shows each line and lets you tap a vote number to fix it. Text reading happens on the phone (nothing uploaded). No history; New Count / Clear resets. Icon: two people (white in front of light blue) on blue; dark and tinted versions too. Waiting on screenshots of the poll from Zoom on his PC before building.
+### Attendance (`/attendance`)
+A hidden, standalone page (not on the menu, `noindex`, no links back to the main site). Used on iPhone in Safari, by Senalbert and friends; can be added to the Home Screen and opens full screen. Pick one or two Zoom poll screenshots (or paste), or Enter by Hand with − / + for choices 1 to 10. Total = sum of (choice × votes), counting only people who answered. Shows each line and lets you tap a vote number to fix it. Text reading happens on the phone (nothing uploaded). No history; New Count / Clear resets. Icon: two people (white in front of light blue) on blue; dark and tinted versions too. Everything is in `attendance/` (one `index.html`, `manifest.webmanifest`, `icons/`). Reading uses Tesseract.js 5.1.1 from jsDelivr. It reads each "(votes/answered) %" line, finds the choice numbers, and uses the percent to fix misread slashes. Then it checks the votes it found against "N of N participated" and says if any are missing.
 
 ## How Senalbert likes to work
 
