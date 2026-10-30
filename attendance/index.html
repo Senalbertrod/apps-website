@@ -579,24 +579,403 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     return (r.unsure ? 0 : 100) + (fits ? 50 : 0) + placed.length - flags * 2 + (sum === r.answered ? 0.5 : 0);
   }
 
+  // Find the poll by its bars: every choice has a thin horizontal bar under it,
+  // all the same length and evenly spaced. Nothing else on screen looks like
+  // that, so it works whatever is around the poll. Works on a small copy of
+  // the photo, tried at a few small tilts, and keeps the tilt where the bars
+  // line up best. Returns the bars in the photo's own pixels, or null.
+  var TILTS = [0, -1.5, 1.5, -3, 3];
+  function findBars(img) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var W = 700, s = W / iw, H = Math.round(ih * s);
+    // Shrink by halves, which smooths away the monitor's fine pixel pattern
+    // that a photo of a screen has (one big jump would keep it).
+    var small = img, sw = iw, sh = ih;
+    while (sw / 2 >= W) {
+      var half = document.createElement('canvas');
+      half.width = Math.round(sw / 2); half.height = Math.round(sh / 2);
+      half.getContext('2d').drawImage(small, 0, 0, half.width, half.height);
+      small = half; sw = half.width; sh = half.height;
+    }
+    var shrunk = document.createElement('canvas'); shrunk.width = W; shrunk.height = H;
+    shrunk.getContext('2d').drawImage(small, 0, 0, W, H);
+    small = shrunk;
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var ctx = c.getContext('2d', { willReadFrequently: true });
+
+    function detect(angle) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+      ctx.translate(W / 2, H / 2); ctx.rotate(angle * Math.PI / 180); ctx.translate(-W / 2, -H / 2);
+      ctx.drawImage(small, 0, 0);
+      var px = ctx.getImageData(0, 0, W, H).data, lum = new Float32Array(W * H);
+      // Each pixel's brightest color, so the blue part of a bar counts as much as the gray part.
+      for (var i = 0, p = 0; p < W * H; i += 4, p++) lum[p] = Math.max(px[i], px[i + 1], px[i + 2]);
+      // A bar pixel is a thin bright line: brighter than the pixels a little above and below it.
+      var d = 6, segs = [];
+      for (var y = d; y < H - d; y++) {
+        var start = -1, gap = 0;
+        for (var x = 0; x <= W; x++) {
+          var on = false;
+          if (x < W) on = lum[y * W + x] - Math.max(lum[(y - d) * W + x], lum[(y + d) * W + x]) > 16;
+          if (on) { if (start < 0) start = x; gap = 0; }
+          else if (start >= 0 && ++gap > 8) {
+            var end = x - gap;
+            if (end - start > W * 0.06) segs.push({ y: y, x0: start, x1: end });
+            start = -1; gap = 0;
+          }
+        }
+      }
+      // Join the pixel rows of one bar into a single bar. Pieces next to each
+      // other (like the blue and gray parts of one bar) join too.
+      var bars = [];
+      segs.forEach(function (sg) {
+        var b = bars.filter(function (b) { return sg.y - b.ylast <= 3 && sg.x0 < b.x1 + 10 && sg.x1 > b.x0 - 10; })[0];
+        if (b) { b.segs.push(sg); b.ylast = sg.y; b.x0 = Math.min(b.x0, sg.x0); b.x1 = Math.max(b.x1, sg.x1); }
+        else bars.push({ segs: [sg], ylast: sg.y, x0: sg.x0, x1: sg.x1 });
+      });
+      bars.forEach(function (b) {
+        // Weigh each piece by its length, so the bar's middle line is where most of it is.
+        var wsum = 0, ysum = 0;
+        b.segs.forEach(function (sg) { var w = sg.x1 - sg.x0; wsum += w; ysum += sg.y * w; });
+        b.y = ysum / wsum;
+      });
+      // A poll bar is long: at least a fifth of the photo's width.
+      bars = bars.filter(function (b) { return b.x1 - b.x0 > W * 0.2; });
+      // The poll: the most bars that end at the same place on the right and are
+      // evenly spaced (two spacings apart is fine too, when one bar is hidden).
+      // Only the right end has to match: a blue fill can hide where the left starts.
+      var found = null;
+      bars.forEach(function (a) {
+        var same = bars.filter(function (b) { return Math.abs(b.x1 - a.x1) < W * 0.03; }).sort(function (p, q) { return p.y - q.y; });
+        if (same.length < 3) return;
+        var gaps = [];
+        for (var k = 1; k < same.length; k++) gaps.push(same[k].y - same[k - 1].y);
+        var g = median(gaps);
+        // Poll bars are about a ninth of their length apart. Much closer is the
+        // monitor's own fine pattern showing in the photo, not a poll.
+        var full = Math.max.apply(null, same.map(function (b) { return b.x1 - b.x0; }));
+        var ratio = g / full;
+        if (ratio < 0.07 || ratio > 0.25) return;
+        var run = [same[0]], bestRun = [same[0]];
+        for (k = 1; k < same.length; k++) {
+          var r = (same[k].y - run[run.length - 1].y) / g;
+          if (Math.abs(r - Math.round(r)) < 0.2 && Math.round(r) >= 1 && Math.round(r) <= 2) run.push(same[k]);
+          else run = [same[k]];
+          if (run.length > bestRun.length) bestRun = run.slice();
+        }
+        var score = bestRun.length + full / W;
+        // A poll has 10 choices at most; many more is a pattern, not a poll.
+        if (bestRun.length >= 3 && bestRun.length <= 11 && (!found || score > found.score)) found = { score: score, angle: angle, g: g, bars: bestRun };
+      });
+      return found;
+    }
+
+    // How much the bars still slope: fit a line through the pieces of each bar.
+    function slope(found) {
+      var num = 0, den = 0;
+      found.bars.forEach(function (b) {
+        var n = 0, mx = 0, my = 0;
+        b.segs.forEach(function (sg) { var w = sg.x1 - sg.x0; n += w; mx += w * (sg.x0 + sg.x1) / 2; my += w * sg.y; });
+        mx /= n; my /= n;
+        b.segs.forEach(function (sg) {
+          var w = sg.x1 - sg.x0, dx = (sg.x0 + sg.x1) / 2 - mx;
+          num += w * dx * (sg.y - my); den += w * dx * dx;
+        });
+      });
+      return den ? num / den : 0;
+    }
+
+    var best = null;
+    TILTS.forEach(function (angle) {
+      var f = detect(angle);
+      if (f && (!best || f.score > best.score)) best = f;
+    });
+    if (!best) return null;
+    // Work out the exact tilt from how much the bars still slope, then move
+    // the bars to where they sit in the level picture. (The bars are found at
+    // a slight turn on purpose: right at the exact tilt, the monitor's pixel
+    // pattern can line up and hide them.)
+    var exact = best.angle - Math.atan(slope(best)) * 180 / Math.PI;
+    var t = (exact - best.angle) * Math.PI / 180, cos = Math.cos(t), sin = Math.sin(t);
+    return { angle: exact, spacing: best.g / s, bars: best.bars.map(function (b) {
+      var mx = (b.x0 + b.x1) / 2 - W / 2, my = b.y - H / 2, half = (b.x1 - b.x0) / 2;
+      var nx = mx * cos - my * sin + W / 2, ny = mx * sin + my * cos + H / 2;
+      return { y: ny / s, x0: (nx - half) / s, x1: (nx + half) / s };
+    }) };
+  }
+
+  // A copy of the photo shrunk by halves to about f times its size, which
+  // smooths away the monitor's fine pixel pattern.
+  function shrinkTo(img, f) {
+    var src = img, w = img.naturalWidth, h = img.naturalHeight;
+    while (w / 2 >= img.naturalWidth * f) {
+      var half = document.createElement('canvas');
+      half.width = Math.round(w / 2); half.height = Math.round(h / 2);
+      half.getContext('2d').drawImage(src, 0, 0, half.width, half.height);
+      src = half; w = half.width; h = half.height;
+    }
+    return src;
+  }
+
+  // Draw part of the photo, turned by the poll's tilt, scaled by k, as dark
+  // text on white. (x, y, w, h) are in the turned photo's own pixels; src is
+  // the photo or a shrunk copy of it.
+  function turnedCut(img, angle, x, y, w, h, k, src) {
+    var cx = img.naturalWidth / 2, cy = img.naturalHeight / 2;
+    var out = document.createElement('canvas');
+    out.width = Math.max(1, Math.round(w * k)); out.height = Math.max(1, Math.round(h * k));
+    var ctx = out.getContext('2d', { willReadFrequently: true });
+    ctx.fillStyle = '#3b3b3b'; ctx.fillRect(0, 0, out.width, out.height);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.setTransform(k, 0, 0, k, -x * k, -y * k);
+    ctx.translate(cx, cy); ctx.rotate(angle * Math.PI / 180); ctx.translate(-cx, -cy);
+    ctx.drawImage(src || img, 0, 0, img.naturalWidth, img.naturalHeight);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    var d = ctx.getImageData(0, 0, out.width, out.height), px = d.data, lo = 255, hi = 0;
+    for (var i = 0; i < px.length; i += 4) {
+      var v = 255 - (px[i] * 0.3 + px[i + 1] * 0.59 + px[i + 2] * 0.11);
+      px[i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
+    }
+    for (i = 0; i < px.length; i += 4) {
+      var s = (px[i] - lo) * 255 / Math.max(1, hi - lo);
+      px[i] = px[i + 1] = px[i + 2] = s; px[i + 3] = 255;
+    }
+    ctx.putImageData(d, 0, 0);
+    return out;
+  }
+
+  // Stack cut-outs into one picture, one per line with space between, so
+  // one read covers them all. Returns which words came from which cut-out.
+  function readStack(worker, tiles, whitelist) {
+    var gap = 28, pad = 16, tileH = 0, width = 0;
+    tiles.forEach(function (t) { tileH = Math.max(tileH, t.height); width = Math.max(width, t.width); });
+    var stack = document.createElement('canvas');
+    stack.width = width + pad * 2; stack.height = tiles.length * (tileH + gap) + pad;
+    var ctx = stack.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, stack.width, stack.height);
+    tiles.forEach(function (t, i) { ctx.drawImage(t, pad, pad + i * (tileH + gap)); });
+    return read(worker, stack, whitelist, '6').then(function (res) {
+      var texts = tiles.map(function () { return []; });
+      (res.data.words || []).forEach(function (w) {
+        var i = Math.floor(((w.bbox.y0 + w.bbox.y1) / 2 - pad + gap / 2) / (tileH + gap));
+        if (i >= 0 && i < tiles.length) texts[i].push({ x: w.bbox.x0, text: w.text, conf: w.confidence });
+      });
+      return texts.map(function (ws) {
+        ws.sort(function (a, b) { return a.x - b.x; });
+        return { text: ws.map(function (w) { return w.text; }).join(' '), conf: ws.length ? Math.min.apply(null, ws.map(function (w) { return w.conf; })) : 0 };
+      });
+    });
+  }
+
+  // "(2/3) 67%" → votes 2 of 3. The slash is sometimes read as 1 or 7, or
+  // dropped; the percent tells which. total is how many answered, if known.
+  function parseCount(text, total) {
+    var t = digits(text).replace(/\s+/g, ' ');
+    var m = t.match(/\(?\s*(\d{1,3})\s*\/\s*(\d{1,3})\s*\)?\s*(\d{1,3})\s*%/);
+    if (m) return { a: +m[1], b: +m[2], pct: +m[3] };
+    m = t.match(/\(?\s*(\d{1,3})\s*\/\s*(\d{1,3})\s*\)/);
+    if (m) return { a: +m[1], b: +m[2], pct: null };
+    m = t.match(/\(\s*(\d{2,7})\s*\)?\s*(\d{1,3})\s*%/);
+    if (m && total) {
+      var best = null;
+      ['1', '7', ''].forEach(function (sep) {
+        var tail = sep + total;
+        if (m[1].length <= tail.length || m[1].slice(-tail.length) !== tail) return;
+        var a = +m[1].slice(0, -tail.length), off = Math.abs(Math.round(a * 100 / total) - +m[2]);
+        if (a <= total && off <= 1 && (!best || off < best.off)) best = { a: a, b: total, pct: +m[2], off: off };
+      });
+      return best;
+    }
+    return null;
+  }
+
+  // Read a poll found by its bars, in three small reads: the vote counts
+  // (above the right end of each bar), the choice numbers (above the left
+  // end), and the lines above the first bar ("2/2 (100%) answered").
+  function readByBars(worker, img, found, step) {
+    var bars = found.bars, sp = found.spacing, a = found.angle;
+    // A photo taken at an angle makes the poll a little like a trapezoid, so
+    // each row gets its own left and right end, along straight lines through
+    // the bars' right ends and their full lengths. (A blue fill can hide
+    // where a bar starts, so only the longest bars count for the length.)
+    function line(pts) {
+      var n = pts.length, my = 0, mv = 0, num = 0, den = 0;
+      pts.forEach(function (p) { my += p[0] / n; mv += p[1] / n; });
+      pts.forEach(function (p) { num += (p[0] - my) * (p[1] - mv); den += (p[0] - my) * (p[0] - my); });
+      var b = den ? num / den : 0;
+      return function (y) { return mv + b * (y - my); };
+    }
+    var longest = Math.max.apply(null, bars.map(function (b) { return b.x1 - b.x0; }));
+    var right = line(bars.map(function (b) { return [b.y, b.x1]; }));
+    var full = bars.filter(function (b) { return b.x1 - b.x0 > longest * 0.9; });
+    var length = full.length >= 2 ? line(full.map(function (b) { return [b.y, b.x1 - b.x0]; })) : function () { return longest; };
+    // Scale so a row is about 100 pixels tall: big enough for small numbers to read well.
+    var k = Math.min(2.5, 100 / sp), src = shrinkTo(img, k * 1.5);
+    // One row per bar, a row where a bar is hidden, and one more after the
+    // last bar (its bar may be under the buttons).
+    var rows = [bars[0].y];
+    for (var i = 1; i < bars.length; i++) {
+      var n = Math.round((bars[i].y - bars[i - 1].y) / sp);
+      for (var j = 1; j <= n; j++) rows.push(bars[i - 1].y + (bars[i].y - bars[i - 1].y) * j / n);
+    }
+    rows.push(rows[rows.length - 1] + sp);
+    function countTile(y, scale) {
+      var x1 = right(y), len = length(y);
+      return bw(turnedCut(img, a, x1 - len * 0.34, y - sp * 0.8, len * 0.38, sp * 0.68, scale, src));
+    }
+    var countTiles = rows.map(function (y) { return countTile(y, k); });
+    var labelTiles = rows.map(function (y) {
+      var x0 = right(y) - length(y), len = length(y);
+      return bw(turnedCut(img, a, x0 - len * 0.04, y - sp * 0.8, len * 0.11, sp * 0.68, k, src));
+    });
+    var y0 = bars[0].y, x00 = right(y0) - length(y0), len0 = length(y0);
+    var head = turnedCut(img, a, x00 - len0 * 0.05, y0 - sp * 3.4, len0 * 0.8, sp * 2.55, k, src);
+    var result = { answered: null, votes: {}, flags: {}, unsure: true };
+    var headLines = [], counts, labels, parsed, anchorY = null;
+
+    // A count that reads cleanly: out of the number who answered, no more
+    // votes than people, and its percent agrees.
+    function clean(p) {
+      return p && (result.answered == null || p.b === result.answered) && p.a <= p.b &&
+        (p.pct == null || p.b === 0 || Math.abs(Math.round(p.a * 100 / p.b) - p.pct) <= 1);
+    }
+
+    step(0);
+    return read(worker, head, '', '6').then(function (res) {
+      (res.data.lines || []).forEach(function (l) { headLines.push({ text: l.text, y: y0 - sp * 3.4 + (l.bbox.y0 + l.bbox.y1) / 2 / k }); });
+      return readStack(worker, countTiles, '0123456789()/%');
+    }).then(function (c) {
+      counts = c;
+      step(1);
+      return readStack(worker, labelTiles, '0123456789');
+    }).then(function (l) {
+      labels = l;
+      // How many answered. Every vote line shows it, like the 3 in "(1/3)",
+      // so the number most lines show wins; the lines above are a backup.
+      var fromHead = null, m;
+      headLines.forEach(function (l) {
+        var low = l.text.toLowerCase();
+        if ((m = low.match(/(\d+)\s*of\s*(\d+)/)) && /partic/.test(low)) fromHead = +m[1];
+        if (/answ/.test(low)) {
+          anchorY = l.y;
+          if ((m = low.match(/(\d+)\s*\/\s*(\d+)/)) && fromHead == null) fromHead = +m[1];
+        }
+      });
+      var seen = {}, bestB = null;
+      counts.forEach(function (t) {
+        var p = parseCount(t.text, null);
+        if (p) { seen[p.b] = (seen[p.b] || 0) + 1; if (bestB == null || seen[p.b] > seen[bestB]) bestB = p.b; }
+      });
+      result.answered = bestB != null && seen[bestB] >= 2 ? bestB : fromHead != null ? fromHead : bestB;
+      parsed = counts.map(function (t) { return parseCount(t.text, result.answered); });
+      // Read again, larger and one at a time, any line that didn't read cleanly.
+      var redo = [];
+      parsed.forEach(function (p, i) { if (!clean(p) && redo.length < 4) redo.push(i); });
+      return redo.reduce(function (done, i) {
+        return done.then(function () {
+          return read(worker, countTile(rows[i], k * 1.6), '0123456789()/%', '7').then(function (res) {
+            var p = parseCount(res.data.text, result.answered);
+            if (clean(p) || (p && !parsed[i])) parsed[i] = p;
+          });
+        });
+      }, Promise.resolve());
+    }).then(function () {
+      // Which choice is the first row? Two kinds of clues: the "answered"
+      // line right above it means choice 1, and each choice number read.
+      var clues = [];
+      if (anchorY != null) clues.push({ top: Math.round((y0 - anchorY) / sp - 0.13), weight: 2 });
+      labels.forEach(function (l, i) {
+        var t = l.text.replace(/\s+/g, ''), n = parseInt(t, 10);
+        if (/^\d{1,2}$/.test(t) && n >= 1 && n <= CHOICES && l.conf > 40) clues.push({ top: n - i, weight: 1 });
+      });
+      var tally = {};
+      clues.forEach(function (c) { if (c.top >= 1 && c.top <= CHOICES) tally[c.top] = (tally[c.top] || 0) + c.weight; });
+      var top = null, most = 0, total = 0;
+      Object.keys(tally).forEach(function (t) { total += tally[t]; if (tally[t] > most) { most = tally[t]; top = +t; } });
+      if (top == null) return result;
+      // Sure only when at least two clues agree and none disagree.
+      result.unsure = false;
+      result.doubt = most < 2 || most < total;
+      parsed.forEach(function (p, i) {
+        var n = top + i;
+        if (!p || n < 1 || n > CHOICES) return;
+        // A count that can't be right (more votes than people, or not out of
+        // the number who answered): the percent tells the real count.
+        var all = result.answered;
+        if (all && p.pct != null && (p.a > all || p.b !== all)) {
+          var fixed = Math.round(p.pct * all / 100);
+          if (Math.abs(Math.round(fixed * 100 / all) - p.pct) <= 1) p = { a: fixed, b: all, pct: p.pct };
+        }
+        if (!clean(p)) result.flags[n] = true;
+        result.votes[n] = p.a;
+      });
+      return result;
+    });
+  }
+
+  // A black and white copy, so thin small numbers read clearly.
+  function bw(src) {
+    var c = document.createElement('canvas'); c.width = src.width; c.height = src.height;
+    var ctx = c.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(src, 0, 0);
+    var d = ctx.getImageData(0, 0, c.width, c.height), px = d.data, lo = 255, sum = 0, n = px.length / 4;
+    for (var i = 0; i < px.length; i += 4) { if (px[i] < lo) lo = px[i]; sum += px[i]; }
+    var cut = (lo + sum / n) / 2;
+    for (i = 0; i < px.length; i += 4) { var v = px[i] < cut ? 0 : 255; px[i] = px[i + 1] = px[i + 2] = v; }
+    ctx.putImageData(d, 0, 0);
+    return c;
+  }
+
   // Usually one reading is enough. If it isn't clean, straighten the
   // picture a little each way and read again, keeping the best reading.
   var ANGLES = [0, -1.5, 1.5];
   function readPicture(pic) {
     return getWorker().then(function (worker) {
       return loadImage(pic.blob).then(function (img) {
-        var best = null;
-        return ANGLES.reduce(function (done, angle, ai) {
-          return done.then(function () {
-            if (best && score(best) >= 150 + 5) return;
-            return readOnce(worker, img, angle, function (s) { stage = ai * 3 + s; }).then(function (r) {
-              if (!best || score(r) > score(best)) best = r;
-            });
+        // First, find the poll by its bars. If that works, it's the quickest and surest way.
+        var found = findBars(img);
+        var first = found ? readByBars(worker, img, found, function (s) { stage = s; }) : Promise.resolve(null);
+        return first.then(function (r) {
+          if (quality(r) >= 0 && !needsSecondLook(r)) { pic.result = r; return; }
+          // Not clean: also try the older way, and keep whichever reads cleaner.
+          return readOld(worker, img).then(function (old) {
+            pic.result = quality(r) >= quality(old) ? r : old;
           });
-        }, Promise.resolve()).then(function () {
-          pic.result = best;
         });
       });
+    });
+  }
+
+  // How clean a reading is: rows placed, votes that add up, nothing marked.
+  function quality(r) {
+    if (!r || !Object.keys(r.votes).length) return -1;
+    var placed = Object.keys(r.votes), sum = 0;
+    placed.forEach(function (k) { sum += r.votes[k]; });
+    var fits = r.answered == null ? 30 : sum === r.answered ? 60 : sum < r.answered ? 30 : 0;
+    return (r.unsure ? 0 : 100) + fits - 10 * Object.keys(r.flags).length - (r.doubt ? 25 : 0) + placed.length;
+  }
+
+  // A reading worth a second look: a line that doesn't add up, row clues
+  // that disagree, or more votes than people.
+  function needsSecondLook(r) {
+    var sum = 0;
+    Object.keys(r.votes).forEach(function (k) { sum += r.votes[k]; });
+    return r.unsure || r.doubt || Object.keys(r.flags).length > 0 || (r.answered != null && sum > r.answered);
+  }
+
+  // The older way, for a picture where the bars can't be found.
+  function readOld(worker, img) {
+    var best = null;
+    return ANGLES.reduce(function (done, angle, ai) {
+      return done.then(function () {
+        if (best && score(best) >= 150 + 5) return;
+        return readOnce(worker, img, angle, function (s) { stage = ai * 3 + s; }).then(function (r) {
+          if (!best || score(r) > score(best)) best = r;
+        });
+      });
+    }, Promise.resolve()).then(function () {
+      return best;
     });
   }
 
@@ -725,6 +1104,7 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     var check = $('check');
     var anyFlag = flagged.some(function (f) { return f; });
     var unsure = pictures.some(function (p) { return p.result && p.result.unsure; });
+    var doubt = pictures.some(function (p) { return p.result && p.result.doubt; });
     if (!pictures.length || busy) { check.className = 'check'; check.textContent = ''; }
     else if (!seen && unsure) { check.className = 'check bad'; check.textContent = 'The votes were found, but not the choice numbers next to them. Try a clearer picture, or type the votes below.'; }
     else if (!seen) { check.className = 'check bad'; check.textContent = 'No votes were found in the picture. Try a clearer picture, or type the votes below.'; }
@@ -738,7 +1118,8 @@ header h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0; }
     else if (counted > answered) { check.className = 'check bad'; check.textContent = 'There are more votes than people who answered. Please check the numbers.'; }
     else {
       var allCounted = answered === 1 ? 'The 1 vote is counted' : 'All ' + answered + ' votes are counted';
-      if (anyFlag) { check.className = 'check warn'; check.textContent = allCounted + ', but please check the marked line.'; }
+      if (doubt) { check.className = 'check warn'; check.textContent = allCounted + ', but please check that each choice number matches Zoom.'; }
+      else if (anyFlag) { check.className = 'check warn'; check.textContent = allCounted + ', but please check the marked line.'; }
       else { check.className = 'check ok'; check.textContent = '✓ ' + allCounted + '.'; }
     }
   }
