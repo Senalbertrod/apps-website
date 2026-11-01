@@ -13,7 +13,12 @@ How a picture is read:
 3. **Only a green ✓ when two clues agree** on which row is choice 1 (the "answered" line and the choice numbers). If they disagree, it says "please check that each choice number matches Zoom".
 4. If no bars are found, or the reading isn't clean, it also tries the older way (`readOld`: cut out the gray window, read the right side) and keeps the cleaner result.
 
-**Testing:** always in iPhone Safari (Xcode simulator: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun simctl`, using the iPhone's ID, never `booted`, because an Apple Watch simulator may be running), since Mac browsers read some pictures differently. Senalbert brings photos from real meetings (in `~/Documents/Attendance`); every set becomes a test, with resized, tilted, low-quality and blurry copies too, and every change must pass all of them. The 2026-10-29 meeting set (IMG_0684–0691) should total 7, 7, 7, 7, 9, 63 and 63. The photos never go on the website.
+**Any monitor, not just one.** The Kingdom Hall monitor is used most, but the page must work on any monitor (home, friends, other Kingdom Halls). Rely on what every Zoom poll has (bars, "(1/3) 33%" lines, the "answered" line), never on one monitor's look. A fix goes in only if it passes every photo set.
+
+**Testing:** always in iPhone Safari (Xcode simulator: `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun simctl`, using the iPhone's ID, never `booted`, because an Apple Watch simulator may be running), since Mac browsers read some pictures differently. Senalbert's meeting photos are in `~/Documents/Attendance`, and the tests live next to them in `~/Documents/Attendance/tests` (never on the website): run `start-tests.sh`, then open `http://127.0.0.1:8765/test/run.html` in the simulator's Safari. `run.html` lists every photo with the total it should show, plus the first test photo (`votes.jpg`, total 11), and also tries resized, tilted, low-quality and blurry copies. Every change must pass them all. To add a new set, put the photos in `~/Documents/Attendance` and add them with their totals to `run.html`. Sets so far:
+- Kingdom Hall, 2026-10-29: IMG_0684–0691 total 7, 7, 7, 7, 9, 63, 63.
+- Home monitor, 2026-11-01: IMG_0768 114 and IMG_0770 121 (complete polls); scrolled pairs 0771+0772 = 131, 0773+0774 = 133, 0775+0776 = 133, 0777+0778 = 135.
+- Known miss: IMG_0685 tilted an extra 2° loses 1 vote, but says "1 vote is missing" rather than showing a wrong total.
 
 ## How Senalbert likes to work
 
