@@ -38,6 +38,14 @@ img { max-width: 100%; display: block; }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
 .brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--text); text-decoration: none; }
 .site-header nav a { color: var(--muted); text-decoration: none; font-size: 15px; }
+/* Language switch: a small globe and the other language's name, across from "Apps" */
+.lang {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500;
+  padding: 6px 10px; margin-right: -10px; border-radius: 999px;
+}
+.lang svg { flex: none; }
+.lang:hover { color: var(--text); background: var(--accent-soft); }
 .site-header nav a:hover { color: var(--text); }
 .site-footer { border-top: 1px solid var(--line); margin-top: 72px; padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
 .site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
