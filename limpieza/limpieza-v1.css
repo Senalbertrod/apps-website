@@ -1,0 +1,79 @@
+/* Limpieza del Salón: a 1920 × 1080 screen, scaled to fit the TV. */
+html, body {
+  margin: 0; height: 100%; overflow: hidden;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+body {
+  /* The same colors as the top of the drawing, so any space around it blends in. */
+  background: linear-gradient(var(--bgt, #dde5ee), var(--bgm, #f3f6f9) 55%, #fff);
+  cursor: default;
+}
+body.no-pointer, body.no-pointer * { cursor: none; }
+
+#stage {
+  position: absolute; left: 50%; top: 50%;
+  width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  overflow: hidden;
+}
+#fondo, #anim, #texto { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+/* Back to front: the drawing, then the bubbles and sparkles, then the words. */
+#fondo { display: block; pointer-events: none; z-index: 0; }
+#anim { z-index: 1; }
+#texto { pointer-events: none; z-index: 2; }
+#texto text { -webkit-user-select: none; user-select: none; }
+#sin-reunion { display: none; }
+body.sin-reunion #con-grupo { display: none; }
+body.sin-reunion #sin-reunion { display: inline; }
+
+/* Bubbles float up and fade near the top; each one sways a little. */
+.bub {
+  position: absolute; top: 0; left: 0;
+  will-change: transform, opacity;
+  animation: rise var(--dur) linear infinite;
+  animation-delay: var(--delay);
+}
+.bub > div {
+  will-change: transform;
+  animation: sway calc(var(--dur) / var(--wob)) ease-in-out infinite;
+  animation-delay: calc(var(--delay) / var(--wob));
+}
+.bub svg { display: block; }
+@keyframes rise {
+  0%   { transform: translate(var(--x), 1000px); opacity: 0; }
+  12%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { transform: translate(var(--x), 100px); opacity: 0; }
+}
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(var(--amp)); }
+  75% { transform: translateX(calc(var(--amp) * -1)); }
+}
+
+/* Sparkles grow and shine, then fade back, each at its own moment. */
+.spark {
+  position: absolute; top: 0; left: 0;
+  will-change: transform, opacity;
+  animation: twinkle var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+@keyframes twinkle {
+  0%, 100% { transform: translate(var(--x), var(--y)) scale(calc(var(--s0) * .45)); opacity: .35; }
+  50%      { transform: translate(var(--x), var(--y)) scale(calc(var(--s0) * 1.1)); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bub, .bub > div, .spark { animation-play-state: paused; }
+}
+
+/* "Doble clic para pantalla completa": a small, soft hint when the page opens. */
+#hint {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+  font: 500 16px/1.2 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #33383f; background: rgba(255, 255, 255, .82);
+  padding: 10px 18px; border-radius: 999px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+  opacity: 0; transition: opacity .6s ease; pointer-events: none;
+}
+#hint.show { opacity: 1; }

@@ -22,6 +22,15 @@ How a picture is read:
 - Home monitor, 2026-11-01: IMG_0768 114 and IMG_0770 121 (complete polls); scrolled pairs 0771+0772 = 131, 0773+0774 = 133, 0775+0776 = 133, 0777+0778 = 135.
 - Known miss: IMG_0685 tilted an extra 2° loses 1 vote, but says "1 vote is missing" rather than showing a wrong total.
 
+### Limpieza del Salón (`/limpieza`)
+A hidden TV page for the Kingdom Hall (not on any menu, no links to or from the site, `noindex, nofollow, noarchive`), shown on a Windows computer (Edge or Chrome) on a 16:9 TV. All text in Spanish. It shows which group cleans the hall this week. Build materials (drawings, samples, the drawing script and `PLAN.md`) are in `Limpieza-para-Claude-Code/`, which is in `.gitignore` and must never be uploaded.
+- **Rotation:** the week of Monday 2026-11-02 is Grupo 5, then 6, 1, 2… every Monday (counted by calendar days, so daylight saving time can't shift it). Groups: 1 Naranjo (yellow), 2 Leonardo (orange), 3 Vasquez (green), 4 Diaz (purple), 5 Imbert (blue), 6 Arias (red).
+- **Weeks with no meeting** (conventions) are listed in `limpieza/sin-reunion.js` (the Monday of each week). Those weeks show "Esta semana no hay reunión" on a neutral background and don't use up a group. The file is always loaded fresh, and re-read every hour.
+- **Screen:** a 1920 × 1080 stage scaled to fit. Back to front: the group's drawing (`grupoN-fondo-vX.svg`, from `arte/`), the bubbles and sparkles (CSS animation, so the graphics chip does the work), then the words (an SVG text layer placed exactly like the drawing script). The date is the computer's own date in Spanish, e.g. "Jueves 5 de noviembre", and it changes by itself at midnight and on Monday. `?fecha=YYYY-MM-DD` previews any day.
+- **TV use:** double-click toggles full screen (Esc also leaves); a hint shows for a few seconds; the pointer hides when still; Screen Wake Lock keeps the screen on; no group switch, no local storage, no cookies.
+- **Updates:** every file name has a version (`limpieza-v1.js`, `grupo3-fondo-v1.svg`…). On any change, raise the number in every file name, in `index.html`, in `VERSION` in the script, and in `sw.js` (its `VERSION` and file list). `sw.js` always tries the network first and uses its saved copy only when offline. The page checks for a new version every hour and reloads by itself, but only when it's not in full screen.
+- **Testing:** the schedule cases in `PLAN.md` (checked with `window.limpieza.whoCleans`), and full-size pictures at 1920 × 1080 compared with `muestras/`.
+
 ## How Senalbert likes to work
 
 1. Use plain English. When asked, explain step by step. If he says "don't put it in a chart", don't use charts or tables.
