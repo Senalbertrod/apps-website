@@ -1,7 +1,7 @@
 // Limpieza del Salón: shows which group cleans the Kingdom Hall this week.
 (function () {
   // Raise this, and the -v number in every file name, on every change.
-  var VERSION = 2;
+  var VERSION = 3;
 
   // ---------- The groups ----------
 
@@ -79,7 +79,7 @@
     document.body.classList.toggle('sin-reunion', !!who.noMeeting);
     document.body.style.setProperty('--bgt', g.bgt);
     document.body.style.setProperty('--bgm', g.bgm);
-    $('fondo').src = who.noMeeting ? 'sin-reunion-fondo-v2.svg' : 'grupo' + who.group + '-fondo-v2.svg';
+    $('fondo').src = who.noMeeting ? 'sin-reunion-fondo-v3.svg' : 'grupo' + who.group + '-fondo-v3.svg';
     $('fecha').textContent = dateText(y, m, d);
     $('fecha').setAttribute('fill', g.date);
     if (!who.noMeeting) {

@@ -2,13 +2,13 @@
 // Always the network first: the saved copy is used only when the network fails,
 // so a new version always reaches the computer as soon as it's online.
 // Raise VERSION with the page's version, and list the page's current files.
-var VERSION = 2;
+var VERSION = 3;
 var CACHE = 'limpieza';
 var FILES = [
-  './', 'sin-reunion.js', 'limpieza-v2.js', 'limpieza-v2.css', 'manifest-v2.webmanifest',
-  'grupo1-fondo-v2.svg', 'grupo2-fondo-v2.svg', 'grupo3-fondo-v2.svg',
-  'grupo4-fondo-v2.svg', 'grupo5-fondo-v2.svg', 'grupo6-fondo-v2.svg', 'sin-reunion-fondo-v2.svg',
-  'icono-v2-180.png', 'icono-v2-192.png', 'icono-v2-512.png'
+  './', 'sin-reunion.js', 'limpieza-v3.js', 'limpieza-v3.css', 'manifest-v3.webmanifest',
+  'grupo1-fondo-v3.svg', 'grupo2-fondo-v3.svg', 'grupo3-fondo-v3.svg',
+  'grupo4-fondo-v3.svg', 'grupo5-fondo-v3.svg', 'grupo6-fondo-v3.svg', 'sin-reunion-fondo-v3.svg',
+  'icono-v3-180.png', 'icono-v3-192.png', 'icono-v3-512.png'
 ];
 
 function fresh(url) { return new Request(url, { cache: 'no-cache' }); }
