@@ -74,6 +74,9 @@ img { max-width: 100%; display: block; }
   color: var(--accent); background: var(--accent-soft);
   padding: 5px 12px; border-radius: 999px;
 }
+/* When an app is out, its badge links to the App Store. */
+a.badge { text-decoration: none; }
+a.badge:hover { color: var(--text); }
 
 /* App page */
 .app-head { display: flex; gap: 24px; align-items: center; padding: 56px 0 8px; }
