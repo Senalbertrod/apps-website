@@ -2,6 +2,8 @@
 
 Senalbert's app website, served by GitHub Pages (CNAME apps.senalbert.com). Plain HTML: `index.html`, one folder per app (support pages), `assets/`. Footer has the QR Code trademark line. Always show new pictures before uploading them.
 
+**Changed a picture? Give it a new file name.** Browsers (especially on iPhone) keep showing their saved copy of a picture with the same name, so a replaced picture never keeps its old name: add or raise a `-vN` (e.g. `lcd-date-icon-v2.png`, `lcd-date-shot-v5.jpg`) and update every page that uses it, English and Spanish.
+
 **English and Spanish.** Every page has a Spanish copy at the same path under `es/` (e.g. `watchtamer/support/` and `es/watchtamer/support/`). The header has "Apps" on the left and, across from it, a globe with the other language's name ("Español" on English pages, "English" on Spanish ones), linking to the same page in the other language. Each page also lists both versions with `hreflang` links. There's no automatic language switching. `404.html` is one page with both languages. Whenever an English page changes, change its Spanish copy in the same step, and the other way around. Spanish is plain and neutral (for any Spanish speaker in the US), uses "tú", and Apple's US Spanish words (carátula, complicaciones, Configuración, Movimiento y actividad física). App names and the apps' own button names (Settings, My Codes, Save…) stay in English, since that's what the apps show. Attendance has no Spanish version yet (Senalbert will say if it needs one). When `assets/style.css` changes, update `style.css?v=` on every page to the first 8 characters of its md5.
 
 ### Attendance (`/attendance`)
