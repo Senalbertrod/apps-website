@@ -44,6 +44,7 @@ A hidden TV page for the Kingdom Hall (not on any menu, no links to or from the 
 ## Senalbert's projects
 
 - App Store apps, all four live as of November 2026 (each page's badge links to its App Store listing): WatchTamer, LCD Date, PM & DST, Make Forever QR Codes.
+- Domino 4 Player (repo Domino-4-Player, folder `~/Documents/Domino 4 Player`): free iPhone, iPhone Duo and iPad app, pages in `domino/` and `es/domino/`, "Coming soon" (no App Store link yet). Its screenshots aren't in yet: the app page has a `.shot-placeholder` box ("Pictures coming soon" / "Imágenes muy pronto") to replace with the pictures. The app is in English and Spanish, so its Spanish pages use the app's own Spanish words (Juego rápido, Equipos, Revolver, Listo, Devolver, Marcador, Modo aprender, fichas, tranque), taken from its `Localizable.xcstrings`. Its score modes are Quick Game and Teams.
 - Downloader: personal use only, never on the App Store.
 - Website: apps.senalbert.com (repo apps-website); app support pages live there.
 - On hold: Lighthouse Island, Lost Signal: Unit 117. Cancelled: Volt Pair (don't touch it).
