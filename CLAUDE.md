@@ -43,7 +43,7 @@ A hidden TV page for the Kingdom Hall (not on any menu, no links to or from the 
 
 ## Senalbert's projects
 
-- App Store apps (release around November 1): WatchTamer, LCD Date, PM & DST, Make Forever QR Codes.
+- App Store apps, all four live as of November 2026 (each page's badge links to its App Store listing): WatchTamer, LCD Date, PM & DST, Make Forever QR Codes.
 - Downloader: personal use only, never on the App Store.
 - Website: apps.senalbert.com (repo apps-website); app support pages live there.
 - On hold: Lighthouse Island, Lost Signal: Unit 117. Cancelled: Volt Pair (don't touch it).
