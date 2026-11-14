@@ -332,6 +332,8 @@ main, .site-header, .site-footer { position: relative; z-index: 1; }
   flex: none; height: 520px; width: auto; border-radius: 30px; scroll-snap-align: start;
   border: 1px solid var(--line); box-shadow: var(--pic-shadow); background: #000;
 }
+/* iPad and iPhone Duo pictures standing up: same swipeable row, rounder screen corners */
+.phone-row.tablet img { border-radius: 22px; }
 .pic-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 .pic-card, .shot-card {
   margin: 0; padding: 22px; border-radius: 28px;
