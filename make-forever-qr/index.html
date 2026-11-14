@@ -4,47 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Make Forever QR Codes · Senalbert Rodriguez</title>
-<meta name="description" content="QR codes that never expire. No account, no ads, no tracking.">
+<meta name="description" content="QR codes that never expire.">
 <link rel="icon" href="../assets/img/favicon.png">
-<link rel="stylesheet" href="../assets/style.css?v=9596c1b8">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css?v=f9833698">
+<script src="../assets/site.js?v=1e2ff6b3" defer></script>
 <link rel="alternate" hreflang="en" href="https://apps.senalbert.com/make-forever-qr/">
 <link rel="alternate" hreflang="es" href="https://apps.senalbert.com/es/make-forever-qr/">
 <link rel="alternate" hreflang="x-default" href="https://apps.senalbert.com/make-forever-qr/">
 </head>
 <body>
+<div class="glows app-glows" aria-hidden="true" style="--g:#34d27a"><i class="gt"></i><i class="g2"></i></div>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="../">Apps</a>
-<a class="lang" href="/es/make-forever-qr/" hreflang="es" lang="es"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>Español</a>
+<a class="brand" href="../"><span aria-hidden="true">&lsaquo; </span>Apps</a>
+<div class="header-right">
+<div class="appearance">
+<button class="theme-btn" type="button" aria-label="Appearance" aria-haspopup="menu" aria-expanded="false" aria-controls="appearance-menu">
+<svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+<svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+</button>
+<div class="menu" id="appearance-menu" role="menu" aria-label="Appearance" hidden>
+<div class="menu-title" aria-hidden="true">Appearance</div>
+<button type="button" role="menuitemradio" aria-checked="true" data-choice="auto" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg><span>Automatic<span class="sub">Follows your settings</span></span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<div class="sep" role="separator"></div>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="light" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span>Light</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="dark" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Dark</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+</div>
+</div>
+<a class="lang" href="/es/make-forever-qr/" hreflang="es" lang="es"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>Español</a>
+</div>
 </div></header>
-<main class="wrap">
-<section class="app-head">
-<img class="icon" src="../assets/img/make-forever-qr-icon.png" alt="Make Forever QR Codes icon" width="112" height="112">
-<div>
+<main class="wrap app-page" style="--g:#34d27a">
+<section class="app-hero">
+<div class="icon-wrap"><img class="app-icon" src="../assets/img/make-forever-qr-icon.png" alt="Make Forever QR Codes icon" width="150" height="150"></div>
 <h1>Make Forever QR Codes</h1>
-<p>QR codes that never expire. No account, no ads, no tracking.</p>
-<a class="badge" href="https://apps.apple.com/us/app/make-forever-qr-codes/id6828174976">Available on the App Store</a>
+<p class="tagline">QR codes that never expire.</p>
+<p class="devices">iPhone &middot; iPad &middot; iPhone Duo &middot; Apple Watch</p>
+<div class="store">
+<a class="store-badge" href="https://apps.apple.com/us/app/make-forever-qr-codes/id6828174976"><img class="badge-white" src="../assets/img/badge-en-white-v1.svg" alt="Download on the App Store" width="162" height="54"><img class="badge-black" src="../assets/img/badge-en-black-v1.svg" alt="Download on the App Store" width="162" height="54"></a>
 </div>
 </section>
-<p class="see-pictures"><a class="button" href="pictures/">See pictures</a></p>
-<ul class="features">
-<li><b>Codes that never expire</b>The information lives inside the squares, so no company can ever switch your codes off.</li>
-<li><b>10 kinds of codes</b>Links, contacts, social profiles, Wi-Fi, text, phone calls, messages, email, map locations and calendar events.</li>
-<li><b>Save, share and print</b>Keep every code in My Codes, share it as a picture, or print it right from the app.</li>
-<li><b>Safe scanning</b>See what's inside a code before anything opens, with the website name shown clearly.</li>
-<li><b>Made for iPad</b>Uses the whole screen. Sideways, your codes are on the left and the one you pick shows big on the right, ready to scan. When scanning, the camera slides over and the result appears beside it.</li>
-<li><b>Made for iPhone Duo</b>Closed, it works like any iPhone. Open it, and every screen spreads out like on iPad. Half-closed like a book, it splits right on the fold: your list on one page, the code on the other. Open or close it any time and you stay right where you were, even in the middle of editing.</li>
-<li><b>On your wrist</b>Put a code on your Apple Watch and show it full screen with a tap.</li>
-</ul>
-<p class="sub" style="color:var(--muted);margin-top:24px">iPhone, iPhone Duo or iPad with iOS 27 or later. Apple Watch optional.</p>
-<div class="links">
-<a href="support/">Support</a>
-<a href="privacy/">Privacy Policy</a>
+
+<h2 class="label">Pictures</h2>
+<div class="pic-tabs" role="tablist" aria-label="Pictures"><button type="button" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true">iPhone</button><button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1">iPad</button><button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">iPhone Duo</button></div>
+<section class="pic-panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0"><h3 class="panel-title">iPhone</h3><div class="phone-row"><img src="../assets/img/make-forever-qr-1-make.jpg" alt="Make a Code: pick a link, contact, Wi-Fi, event and more" width="660" height="1434" loading="lazy"><img src="../assets/img/make-forever-qr-2-link.jpg" alt="Making a link code, with colors and an icon in the middle" width="660" height="1434" loading="lazy"><img src="../assets/img/make-forever-qr-3-scan.jpg" alt="Scanning a printed QR code with the camera" width="660" height="1434" loading="lazy"><img src="../assets/img/make-forever-qr-4-code.jpg" alt="A saved Wi-Fi code with Share, Save Image, Print and more" width="660" height="1434" loading="lazy"><img src="../assets/img/make-forever-qr-5-my-codes.jpg" alt="My Codes, with favorites at the top" width="660" height="1434" loading="lazy"></div></section>
+<section class="pic-panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1"><h3 class="panel-title">iPad</h3><div class="pic-cards"><figure class="pic-card wide"><img src="../assets/img/make-forever-qr-ipad-1-make.jpg" alt="" width="1400" height="965" loading="lazy"><figcaption>iPad sideways: Make a Code, with five tiles across</figcaption></figure><figure class="pic-card wide"><img src="../assets/img/make-forever-qr-ipad-2-edit.jpg" alt="" width="1400" height="965" loading="lazy"><figcaption>iPad sideways: making a code, with the code on the left and the settings on the right</figcaption></figure><figure class="pic-card tall"><img src="../assets/img/make-forever-qr-ipad-0-make-up.jpg" alt="" width="1000" height="1450" loading="lazy"><figcaption>iPad standing up: Make a Code</figcaption></figure></div></section>
+<section class="pic-panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2"><h3 class="panel-title">iPhone Duo</h3><div class="pic-cards"><figure class="pic-card wide"><img src="../assets/img/make-forever-qr-duo-0-make.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo open: Make a Code, with five tiles across</figcaption></figure><figure class="pic-card wide"><img src="../assets/img/make-forever-qr-duo-1-my-codes.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo open: your codes on the left, the one you pick big on the right</figcaption></figure><figure class="pic-card wide"><img src="../assets/img/make-forever-qr-duo-2-edit.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo open: making a code, with the code on the left and the settings on the right</figcaption></figure></div></section>
+
+<h2 class="label">What it does</h2>
+<div class="feature-grid">
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-1.8-2.3-3.3-3.5-5-3.5a3.5 3.5 0 0 0 0 7c1.7 0 3.2-1.2 5-3.5zm0 0c1.8 2.3 3.3 3.5 5 3.5a3.5 3.5 0 0 0 0-7c-1.7 0-3.2 1.2-5 3.5z"/></svg></div><h3>Codes that never expire</h3><p>The information lives inside the squares, so no company can ever switch your codes off.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M17 20h4v-3"/></svg></div><h3>10 kinds of codes</h3><p>Links, contacts, social profiles, Wi-Fi, text, phone calls, messages, email, map locations and calendar events.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3.5h10V9"/><rect x="3.5" y="9" width="17" height="8" rx="2"/><rect x="7" y="14" width="10" height="6.5"/></svg></div><h3>Save, share and print</h3><p>Keep every code in My Codes, share it as a picture, or print it right from the app.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.3-7.5 9.5-4.3-1.2-7.5-5-7.5-9.5V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/></svg></div><h3>Safe scanning</h3><p>See what's inside a code before anything opens, with the website name shown clearly.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M10.5 18h3"/></svg></div><h3>Made for iPad</h3><p>Uses the whole screen. Sideways, your codes are on the left and the one you pick shows big on the right, ready to scan. When scanning, the camera slides over and the result appears beside it.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8.5" height="16" rx="2"/><rect x="12.5" y="4" width="8.5" height="16" rx="2"/></svg></div><h3>Made for iPhone Duo</h3><p>Closed, it works like any iPhone. Open it, and every screen spreads out like on iPad. Half-closed like a book, it splits right on the fold: your list on one page, the code on the other. Open or close it any time and you stay right where you were, even in the middle of editing.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6l.6-3h4.8l.6 3M9 18l.6 3h4.8l.6-3M12 9.5V12l1.5 1"/></svg></div><h3>On your wrist</h3><p>Put a code on your Apple Watch and show it full screen with a tap.</p></div>
+</div>
+
+<div class="needs">
+<p>iPhone, iPhone Duo or iPad with iOS 27 or later. Apple Watch optional.</p>
+<div class="needs-links"><a class="pill-btn" href="support/">Support</a><a class="pill-btn" href="privacy/">Privacy Policy</a></div>
 </div>
 </main>
 <footer class="site-footer"><div class="wrap">
 <span>&copy; 2026 Senalbert Rodriguez &middot; Florida, United States</span>
 <a href="mailto:support@senalbert.com">support@senalbert.com</a>
-<span style="flex-basis:100%;font-size:12px">QR Code is a registered trademark of DENSO WAVE INCORPORATED.</span>
+<span class="tm">QR Code is a registered trademark of DENSO WAVE INCORPORATED.</span>
 </div></footer>
 </body>
 </html>

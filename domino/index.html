@@ -6,41 +6,62 @@
 <title>Domino 4 Player · Senalbert Rodriguez</title>
 <meta name="description" content="Keep score on domino night, and practice Cuban dominoes against the computer.">
 <link rel="icon" href="../assets/img/favicon.png">
-<link rel="stylesheet" href="../assets/style.css?v=9596c1b8">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css?v=f9833698">
+<script src="../assets/site.js?v=1e2ff6b3" defer></script>
 <link rel="alternate" hreflang="en" href="https://apps.senalbert.com/domino/">
 <link rel="alternate" hreflang="es" href="https://apps.senalbert.com/es/domino/">
 <link rel="alternate" hreflang="x-default" href="https://apps.senalbert.com/domino/">
 </head>
 <body>
+<div class="glows app-glows" aria-hidden="true" style="--g:#ffa24a"><i class="gt"></i><i class="g2"></i></div>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="../">Apps</a>
-<a class="lang" href="/es/domino/" hreflang="es" lang="es"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>Español</a>
-</div></header>
-<main class="wrap">
-<section class="app-head">
-<img class="icon" src="../assets/img/domino-icon-v1.png" alt="Domino 4 Player icon" width="112" height="112">
-<div>
-<h1>Domino 4 Player</h1>
-<p>Keep score on domino night, and practice Cuban dominoes against the computer.</p>
-<span class="badge">Coming soon to the App Store</span>
+<a class="brand" href="../"><span aria-hidden="true">&lsaquo; </span>Apps</a>
+<div class="header-right">
+<div class="appearance">
+<button class="theme-btn" type="button" aria-label="Appearance" aria-haspopup="menu" aria-expanded="false" aria-controls="appearance-menu">
+<svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+<svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+</button>
+<div class="menu" id="appearance-menu" role="menu" aria-label="Appearance" hidden>
+<div class="menu-title" aria-hidden="true">Appearance</div>
+<button type="button" role="menuitemradio" aria-checked="true" data-choice="auto" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg><span>Automatic<span class="sub">Follows your settings</span></span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<div class="sep" role="separator"></div>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="light" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span>Light</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="dark" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Dark</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
 </div>
+</div>
+<a class="lang" href="/es/domino/" hreflang="es" lang="es"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>Español</a>
+</div>
+</div></header>
+<main class="wrap app-page" style="--g:#ffa24a">
+<section class="app-hero">
+<div class="icon-wrap"><img class="app-icon" src="../assets/img/domino-icon-v1.png" alt="Domino 4 Player icon" width="150" height="150"></div>
+<h1>Domino 4 Player</h1>
+<p class="tagline">Keep score on domino night, and practice Cuban dominoes against the computer.</p>
+<p class="devices">iPhone &middot; iPad &middot; iPhone Duo</p>
+<div class="store"><span class="status soon big">Coming soon</span></div>
 </section>
-<figure class="shot shot-placeholder"><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><span>Pictures coming soon</span></figure>
-<ul class="features">
-<li><b>Quick Game</b>Two teams of two: enter each round's points, see every round, and fix or undo the last one. The scoreboard keeps count of games won.</li>
-<li><b>Teams: winner stays</b>Add all the teams and the line takes care of itself: the winners stay, the next team comes in, and the losers go to the back of the line.</li>
-<li><b>Play to any target</b>Choose the points to win in steps of 50.</li>
-<li><b>Results</b>Longest streak, fastest win and biggest round, plus the list of games played.</li>
-<li><b>Practice Cuban dominoes</b>Double-nine, with tranque rules: you and a computer partner against two computer rivals. Make each one Easy, Medium or Hard.</li>
-<li><b>Learn mode</b>On your turn, a card suggests a good move and explains why.</li>
-<li><b>Feels like real tiles</b>Tap a tile to lift it, flick it up to play it, and drag to arrange your hand. Before each round, tap Shake.</li>
-<li><b>Your way</b>Light or dark mode, and play counter-clockwise or clockwise.</li>
-<li><b>In English and Spanish</b>Domino 4 Player follows your iPhone or iPad's language.</li>
-</ul>
-<p class="sub" style="color:var(--muted);margin-top:24px">iPhone, iPhone Duo or iPad with iOS 27 or later. Free. No account, no ads, no tracking.</p>
-<div class="links">
-<a href="support/">Support</a>
-<a href="privacy/">Privacy Policy</a>
+
+<h2 class="label">Pictures</h2>
+<figure class="shot-placeholder"><svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg><span>Pictures coming soon</span></figure>
+
+<h2 class="label">What it does</h2>
+<div class="feature-grid">
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M12 4v16M7 10v4M15.5 10h2.5v2h-2.5v2H18"/></svg></div><h3>Quick Game</h3><p>Two teams of two: enter each round's points, see every round, and fix or undo the last one. The scoreboard keeps count of games won.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5M14.5 14.3c3 0 6 1.4 6 4.7"/></svg></div><h3>Teams: winner stays</h3><p>Add all the teams and the line takes care of itself: the winners stay, the next team comes in, and the losers go to the back of the line.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg></div><h3>Play to any target</h3><p>Choose the points to win in steps of 50.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/></svg></div><h3>Results</h3><p>Longest streak, fastest win and biggest round, plus the list of games played.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="8" height="14" rx="2" transform="rotate(-8 7.5 12)"/><rect x="12.5" y="5" width="8" height="14" rx="2" transform="rotate(8 16.5 12)"/><path d="M5.6 12h4M14.6 12h4"/></svg></div><h3>Practice Cuban dominoes</h3><p>Double-nine, with tranque rules: you and a computer partner against two computer rivals. Make each one Easy, Medium or Hard.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17.5h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16.5h5V15.9c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg></div><h3>Learn mode</h3><p>On your turn, a card suggests a good move and explains why.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4a1.5 1.5 0 0 1 3 0v6M14 10.5V6a1.5 1.5 0 0 1 3 0v8c0 4-2.5 7-6 7-2.5 0-4-1.2-5.5-3.5L3.5 14a1.5 1.5 0 0 1 2.5-1.6L8 15"/></svg></div><h3>Feels like real tiles</h3><p>Tap a tile to lift it, flick it up to play it, and drag to arrange your hand. Before each round, tap Shake.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></div><h3>Your way</h3><p>Light or dark mode, and play counter-clockwise or clockwise.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg></div><h3>In English and Spanish</h3><p>Domino 4 Player follows your iPhone or iPad's language.</p></div>
+</div>
+
+<div class="needs">
+<p>iPhone, iPhone Duo or iPad with iOS 27 or later. Free.</p>
+<div class="needs-links"><a class="pill-btn" href="support/">Support</a><a class="pill-btn" href="privacy/">Privacy Policy</a></div>
 </div>
 </main>
 <footer class="site-footer"><div class="wrap">

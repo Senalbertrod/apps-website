@@ -4,47 +4,73 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Make Forever QR Codes · Senalbert Rodriguez</title>
-<meta name="description" content="Códigos QR que nunca caducan. Sin cuenta, sin anuncios, sin rastreo.">
+<meta name="description" content="Códigos QR que nunca caducan.">
 <link rel="icon" href="../../assets/img/favicon.png">
-<link rel="stylesheet" href="../../assets/style.css?v=9596c1b8">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=f9833698">
+<script src="../../assets/site.js?v=1e2ff6b3" defer></script>
 <link rel="alternate" hreflang="en" href="https://apps.senalbert.com/make-forever-qr/">
 <link rel="alternate" hreflang="es" href="https://apps.senalbert.com/es/make-forever-qr/">
 <link rel="alternate" hreflang="x-default" href="https://apps.senalbert.com/make-forever-qr/">
 </head>
 <body>
+<div class="glows app-glows" aria-hidden="true" style="--g:#34d27a"><i class="gt"></i><i class="g2"></i></div>
 <header class="site-header"><div class="wrap">
-<a class="brand" href="../">Apps</a>
-<a class="lang" href="/make-forever-qr/" hreflang="en" lang="en"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>English</a>
+<a class="brand" href="../"><span aria-hidden="true">&lsaquo; </span>Apps</a>
+<div class="header-right">
+<div class="appearance">
+<button class="theme-btn" type="button" aria-label="Apariencia" aria-haspopup="menu" aria-expanded="false" aria-controls="appearance-menu">
+<svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+<svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+</button>
+<div class="menu" id="appearance-menu" role="menu" aria-label="Apariencia" hidden>
+<div class="menu-title" aria-hidden="true">Apariencia</div>
+<button type="button" role="menuitemradio" aria-checked="true" data-choice="auto" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg><span>Automático<span class="sub">Sigue tu configuración</span></span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<div class="sep" role="separator"></div>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="light" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span>Claro</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="dark" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>Oscuro</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+</div>
+</div>
+<a class="lang" href="/make-forever-qr/" hreflang="en" lang="en"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg>English</a>
+</div>
 </div></header>
-<main class="wrap">
-<section class="app-head">
-<img class="icon" src="../../assets/img/make-forever-qr-icon.png" alt="Ícono de Make Forever QR Codes" width="112" height="112">
-<div>
+<main class="wrap app-page" style="--g:#34d27a">
+<section class="app-hero">
+<div class="icon-wrap"><img class="app-icon" src="../../assets/img/make-forever-qr-icon.png" alt="Ícono de Make Forever QR Codes" width="150" height="150"></div>
 <h1>Make Forever QR Codes</h1>
-<p>Códigos QR que nunca caducan. Sin cuenta, sin anuncios, sin rastreo.</p>
-<a class="badge" href="https://apps.apple.com/us/app/make-forever-qr-codes/id6828174976">Disponible en el App Store</a>
+<p class="tagline">Códigos QR que nunca caducan.</p>
+<p class="devices">iPhone &middot; iPad &middot; iPhone Duo &middot; Apple Watch</p>
+<div class="store">
+<a class="store-badge" href="https://apps.apple.com/us/app/make-forever-qr-codes/id6828174976"><img class="badge-white" src="../../assets/img/badge-es-white-v1.svg" alt="Descárgalo en el App Store" width="162" height="54"><img class="badge-black" src="../../assets/img/badge-es-black-v1.svg" alt="Descárgalo en el App Store" width="162" height="54"></a>
 </div>
 </section>
-<p class="see-pictures"><a class="button" href="pictures/">Ver imágenes</a></p>
-<ul class="features">
-<li><b>Códigos que nunca caducan</b>La información va dentro de los cuadritos, así que ninguna compañía puede desactivar tus códigos jamás.</li>
-<li><b>10 tipos de códigos</b>Enlaces, contactos, perfiles de redes sociales, Wi-Fi, texto, llamadas, mensajes, correo electrónico, ubicaciones en el mapa y eventos del calendario.</li>
-<li><b>Guarda, comparte e imprime</b>Guarda cada código en My Codes, compártelo como imagen o imprímelo directo desde la app.</li>
-<li><b>Escaneo seguro</b>Mira lo que hay dentro de un código antes de que se abra nada, con el nombre del sitio web bien visible.</li>
-<li><b>Hecha para iPad</b>Usa toda la pantalla. De lado, tus códigos quedan a la izquierda y el que eliges se ve grande a la derecha, listo para escanear. Al escanear, la cámara se desliza a un lado y el resultado aparece junto a ella.</li>
-<li><b>Hecha para iPhone Duo</b>Cerrado, funciona como cualquier iPhone. Ábrelo y cada pantalla se extiende como en el iPad. Medio cerrado como un libro, se divide justo en el pliegue: tu lista en una página y el código en la otra. Ábrelo o ciérralo cuando quieras y sigues justo donde estabas, incluso a mitad de una edición.</li>
-<li><b>En tu muñeca</b>Pon un código en tu Apple Watch y muéstralo en pantalla completa con un toque.</li>
-</ul>
-<p class="sub" style="color:var(--muted);margin-top:24px">iPhone, iPhone Duo o iPad con iOS 27 o posterior. Apple Watch opcional.</p>
-<div class="links">
-<a href="support/">Soporte</a>
-<a href="privacy/">Política de privacidad</a>
+
+<h2 class="label">Imágenes</h2>
+<div class="pic-tabs" role="tablist" aria-label="Imágenes"><button type="button" role="tab" id="tab-0" aria-controls="panel-0" aria-selected="true">iPhone</button><button type="button" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1">iPad</button><button type="button" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1">iPhone Duo</button></div>
+<section class="pic-panel" id="panel-0" role="tabpanel" aria-labelledby="tab-0"><h3 class="panel-title">iPhone</h3><div class="phone-row"><img src="../../assets/img/make-forever-qr-1-make.jpg" alt="Make a Code: elige un enlace, un contacto, Wi-Fi, un evento y más" width="660" height="1434" loading="lazy"><img src="../../assets/img/make-forever-qr-2-link.jpg" alt="Creando un código de enlace, con colores y un ícono en el centro" width="660" height="1434" loading="lazy"><img src="../../assets/img/make-forever-qr-3-scan.jpg" alt="Escaneando un código QR impreso con la cámara" width="660" height="1434" loading="lazy"><img src="../../assets/img/make-forever-qr-4-code.jpg" alt="Un código de Wi-Fi guardado, con Share, Save Image, Print y más" width="660" height="1434" loading="lazy"><img src="../../assets/img/make-forever-qr-5-my-codes.jpg" alt="My Codes, con los favoritos arriba" width="660" height="1434" loading="lazy"></div></section>
+<section class="pic-panel" id="panel-1" role="tabpanel" aria-labelledby="tab-1"><h3 class="panel-title">iPad</h3><div class="pic-cards"><figure class="pic-card wide"><img src="../../assets/img/make-forever-qr-ipad-1-make.jpg" alt="" width="1400" height="965" loading="lazy"><figcaption>iPad de lado: Make a Code, con cinco recuadros a lo ancho</figcaption></figure><figure class="pic-card wide"><img src="../../assets/img/make-forever-qr-ipad-2-edit.jpg" alt="" width="1400" height="965" loading="lazy"><figcaption>iPad de lado: creando un código, con el código a la izquierda y los ajustes a la derecha</figcaption></figure><figure class="pic-card tall"><img src="../../assets/img/make-forever-qr-ipad-0-make-up.jpg" alt="" width="1000" height="1450" loading="lazy"><figcaption>iPad de pie: Make a Code</figcaption></figure></div></section>
+<section class="pic-panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2"><h3 class="panel-title">iPhone Duo</h3><div class="pic-cards"><figure class="pic-card wide"><img src="../../assets/img/make-forever-qr-duo-0-make.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo abierto: Make a Code, con cinco recuadros a lo ancho</figcaption></figure><figure class="pic-card wide"><img src="../../assets/img/make-forever-qr-duo-1-my-codes.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo abierto: tus códigos a la izquierda y el que eliges, en grande, a la derecha</figcaption></figure><figure class="pic-card wide"><img src="../../assets/img/make-forever-qr-duo-2-edit.jpg" alt="" width="1400" height="985" loading="lazy"><figcaption>iPhone Duo abierto: creando un código, con el código a la izquierda y los ajustes a la derecha</figcaption></figure></div></section>
+
+<h2 class="label">Qué hace</h2>
+<div class="feature-grid">
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-1.8-2.3-3.3-3.5-5-3.5a3.5 3.5 0 0 0 0 7c1.7 0 3.2-1.2 5-3.5zm0 0c1.8 2.3 3.3 3.5 5 3.5a3.5 3.5 0 0 0 0-7c-1.7 0-3.2 1.2-5 3.5z"/></svg></div><h3>Códigos que nunca caducan</h3><p>La información va dentro de los cuadritos, así que ninguna compañía puede desactivar tus códigos jamás.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M17 20h4v-3"/></svg></div><h3>10 tipos de códigos</h3><p>Enlaces, contactos, perfiles de redes sociales, Wi-Fi, texto, llamadas, mensajes, correo electrónico, ubicaciones en el mapa y eventos del calendario.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3.5h10V9"/><rect x="3.5" y="9" width="17" height="8" rx="2"/><rect x="7" y="14" width="10" height="6.5"/></svg></div><h3>Guarda, comparte e imprime</h3><p>Guarda cada código en My Codes, compártelo como imagen o imprímelo directo desde la app.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.5c0 4.5-3.2 8.3-7.5 9.5-4.3-1.2-7.5-5-7.5-9.5V6z"/><path d="M8.8 12l2.2 2.2 4.2-4.4"/></svg></div><h3>Escaneo seguro</h3><p>Mira lo que hay dentro de un código antes de que se abra nada, con el nombre del sitio web bien visible.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M10.5 18h3"/></svg></div><h3>Hecha para iPad</h3><p>Usa toda la pantalla. De lado, tus códigos quedan a la izquierda y el que eliges se ve grande a la derecha, listo para escanear. Al escanear, la cámara se desliza a un lado y el resultado aparece junto a ella.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8.5" height="16" rx="2"/><rect x="12.5" y="4" width="8.5" height="16" rx="2"/></svg></div><h3>Hecha para iPhone Duo</h3><p>Cerrado, funciona como cualquier iPhone. Ábrelo y cada pantalla se extiende como en el iPad. Medio cerrado como un libro, se divide justo en el pliegue: tu lista en una página y el código en la otra. Ábrelo o ciérralo cuando quieras y sigues justo donde estabas, incluso a mitad de una edición.</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6l.6-3h4.8l.6 3M9 18l.6 3h4.8l.6-3M12 9.5V12l1.5 1"/></svg></div><h3>En tu muñeca</h3><p>Pon un código en tu Apple Watch y muéstralo en pantalla completa con un toque.</p></div>
+</div>
+
+<div class="needs">
+<p>iPhone, iPhone Duo o iPad con iOS 27 o posterior. Apple Watch opcional.</p>
+<div class="needs-links"><a class="pill-btn" href="support/">Soporte</a><a class="pill-btn" href="privacy/">Política de privacidad</a></div>
 </div>
 </main>
 <footer class="site-footer"><div class="wrap">
 <span>&copy; 2026 Senalbert Rodriguez &middot; Florida, Estados Unidos</span>
 <a href="mailto:support@senalbert.com">support@senalbert.com</a>
-<span style="flex-basis:100%;font-size:12px">QR Code es una marca registrada de DENSO WAVE INCORPORATED.</span>
+<span class="tm">QR Code es una marca registrada de DENSO WAVE INCORPORATED.</span>
 </div></footer>
 </body>
 </html>

@@ -1,159 +1,399 @@
+/* apps.senalbert.com, "Midnight" look.
+   Dark is the base. Light comes from the visitor's setting (prefers-color-scheme),
+   or from the Appearance menu, which puts data-theme="light" or "dark" on <html>.
+   Every color that changes between dark and light is a variable, set in the two blocks below. */
+
 :root {
-  --bg: #f6f6f3;
-  --surface: #ffffff;
-  --text: #1c1c1e;
-  --muted: #5f6368;
-  --line: #e3e3de;
-  --accent: #1f7a4d;
-  --accent-soft: #e4f2ea;
+  --bg: #07080c;
+  --text: #f5f5f7;
+  --muted: #a8adb9;
+  --faint: #8b90a0;
+  --line: rgba(255,255,255,.09);
+  --line-strong: rgba(255,255,255,.15);
+  --surface: #111217;
+  --card: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  --card-shadow: none;
+  --card-hover-line: rgba(255,255,255,.2);
+  --chip: rgba(255,255,255,.06);
+  --chip-text: #cfd3dc;
+  --chip-shadow: none;
+  --accent: #7dffb0;
+  --accent-soft: rgba(125,255,176,.12);
+  --on-accent: #07120c;
+  --soon: #ffa24a;
+  --soon-soft: rgba(255,162,74,.15);
+  --fade: linear-gradient(90deg, #7dffb0, #6aa8ff 55%, #ffa24a);
+  --glow-green: rgba(31,138,76,.55);
+  --glow-blue: rgba(58,91,255,.45);
+  --glow-orange: rgba(240,122,26,.28);
+  --icon-shadow: 0 30px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+  --pic-shadow: 0 20px 50px rgba(0,0,0,.5);
+  --pic-glow: .45;
+  --menu-bg: rgba(40,42,50,.72);
+  --menu-line: rgba(255,255,255,.14);
+  --menu-shadow: 0 20px 50px rgba(0,0,0,.55);
+  --menu-faint: #9aa0ad;
+  --menu-sep: rgba(255,255,255,.1);
+  --check: #4c9dff;
+  --pick: #2f6bff;
+  --show-moon: block;
+  --show-sun: none;
+  --badge-white: inline-block;
+  --badge-black: none;
+  --tab-on-bg: #ffffff;
+  --tab-on-text: #07080c;
+  --needs-bg: transparent;
+  --top-glow: .55;
   --radius: 18px;
+  color-scheme: dark;
+}
+
+/* Light: chosen in the menu */
+:root[data-theme="light"] {
+  --bg: #f5f5f7;
+  --text: #1d1d1f;
+  --muted: #5f6470;
+  --faint: #86868b;
+  --line: rgba(0,0,0,.08);
+  --line-strong: rgba(0,0,0,.1);
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.05);
+  --card-hover-line: rgba(0,0,0,.14);
+  --chip: #ffffff;
+  --chip-text: #444;
+  --chip-shadow: 0 1px 3px rgba(0,0,0,.08);
+  --accent: #1f8a4c;
+  --accent-soft: #e3f6ea;
+  --on-accent: #ffffff;
+  --soon: #c95f0a;
+  --soon-soft: #fff0e3;
+  --fade: linear-gradient(90deg, #1f9d55, #2f6bff 55%, #e46a0a);
+  --glow-green: rgba(31,138,76,.22);
+  --glow-blue: rgba(58,91,255,.18);
+  --glow-orange: rgba(240,122,26,.14);
+  --icon-shadow: 0 24px 50px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
+  --pic-shadow: 0 18px 40px rgba(0,0,0,.18);
+  --pic-glow: .22;
+  --menu-bg: rgba(255,255,255,.75);
+  --menu-line: rgba(0,0,0,.08);
+  --menu-shadow: 0 20px 50px rgba(0,0,0,.18);
+  --menu-faint: #86868b;
+  --menu-sep: rgba(0,0,0,.08);
+  --check: #0a72ff;
+  --show-moon: none;
+  --show-sun: block;
+  --badge-white: none;
+  --badge-black: inline-block;
+  --tab-on-bg: #1d1d1f;
+  --tab-on-text: #ffffff;
+  --needs-bg: #ffffff;
+  --top-glow: .2;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111213;
-    --surface: #1b1c1e;
-    --text: #f2f2f0;
-    --muted: #a3a6aa;
-    --line: #2c2e31;
-    --accent: #5fd197;
-    --accent-soft: #1d2e25;
-    color-scheme: dark;
+
+/* Light: "Automatic" (no data-theme) and the visitor's setting is light. Same values as above. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f5f5f7;
+    --text: #1d1d1f;
+    --muted: #5f6470;
+    --faint: #86868b;
+    --line: rgba(0,0,0,.08);
+    --line-strong: rgba(0,0,0,.1);
+    --surface: #ffffff;
+    --card: #ffffff;
+    --card-shadow: 0 1px 3px rgba(0,0,0,.05);
+    --card-hover-line: rgba(0,0,0,.14);
+    --chip: #ffffff;
+    --chip-text: #444;
+    --chip-shadow: 0 1px 3px rgba(0,0,0,.08);
+    --accent: #1f8a4c;
+    --accent-soft: #e3f6ea;
+    --on-accent: #ffffff;
+    --soon: #c95f0a;
+    --soon-soft: #fff0e3;
+    --fade: linear-gradient(90deg, #1f9d55, #2f6bff 55%, #e46a0a);
+    --glow-green: rgba(31,138,76,.22);
+    --glow-blue: rgba(58,91,255,.18);
+    --glow-orange: rgba(240,122,26,.14);
+    --icon-shadow: 0 24px 50px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
+    --pic-shadow: 0 18px 40px rgba(0,0,0,.18);
+    --pic-glow: .22;
+    --menu-bg: rgba(255,255,255,.75);
+    --menu-line: rgba(0,0,0,.08);
+    --menu-shadow: 0 20px 50px rgba(0,0,0,.18);
+    --menu-faint: #86868b;
+    --menu-sep: rgba(0,0,0,.08);
+    --check: #0a72ff;
+    --show-moon: none;
+    --show-sun: block;
+    --badge-white: none;
+    --badge-black: inline-block;
+    --tab-on-bg: #1d1d1f;
+    --tab-on-text: #ffffff;
+    --needs-bg: #ffffff;
+    --top-glow: .2;
+    color-scheme: light;
   }
 }
+
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0; position: relative; min-height: 100vh;
+  background: var(--bg); color: var(--text);
+  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: var(--accent); text-underline-offset: 3px; }
 img { max-width: 100%; display: block; }
-.wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+main, .site-header, .site-footer { position: relative; z-index: 1; }
+.site-header { z-index: 10; }
 
-/* Header and footer */
-.site-header { border-bottom: 1px solid var(--line); background: var(--surface); }
-.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
-.brand { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--text); text-decoration: none; }
-.site-header nav a { color: var(--muted); text-decoration: none; font-size: 15px; }
-/* Language switch: a small globe and the other language's name, across from "Apps" */
+/* Soft color glows behind the page (gradients, not blur filters, so iPhone stays smooth) */
+.glows { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.glows i { position: absolute; border-radius: 50%; }
+.glows .g1 { width: 1000px; height: 1000px; top: -380px; left: -320px; background: radial-gradient(closest-side, var(--glow-green), transparent); }
+.glows .g2 { width: 900px; height: 900px; top: -320px; right: -360px; background: radial-gradient(closest-side, var(--glow-blue), transparent); }
+.glows .g3 { width: 800px; height: 800px; top: 1050px; left: 30%; background: radial-gradient(closest-side, var(--glow-orange), transparent); }
+
+/* Header */
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 76px; }
+.brand { font-weight: 800; font-size: 19px; letter-spacing: -0.01em; color: var(--text); text-decoration: none; }
+.header-right { display: flex; align-items: center; gap: 10px; }
 .lang {
   display: inline-flex; align-items: center; gap: 6px;
-  color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 500;
-  padding: 6px 10px; margin-right: -10px; border-radius: 999px;
+  color: var(--chip-text); text-decoration: none; font-size: 15px; font-weight: 600;
+  padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--chip); box-shadow: var(--chip-shadow);
 }
 .lang svg { flex: none; }
-.lang:hover { color: var(--text); background: var(--accent-soft); }
-.site-header nav a:hover { color: var(--text); }
-.site-footer { border-top: 1px solid var(--line); margin-top: 72px; padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
-.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
-.site-footer a { color: var(--muted); }
+.lang:hover { color: var(--text); }
 
-/* Home */
-.hero { padding: 64px 0 28px; }
-.hero h1 { font-size: clamp(34px, 6vw, 52px); line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 14px; }
-.hero p { font-size: 19px; color: var(--muted); margin: 0; max-width: 40em; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; margin-top: 28px; }
-.card {
-  display: flex; flex-direction: column; gap: 12px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 22px; color: var(--text); text-decoration: none;
-  transition: transform .15s ease, border-color .15s ease;
+/* Appearance button and menu (shown only when JavaScript runs; without it the site follows the device) */
+.appearance { position: relative; display: none; }
+.js .appearance { display: block; }
+.theme-btn {
+  width: 40px; height: 40px; border-radius: 50%; padding: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line-strong); background: var(--chip); color: var(--text); box-shadow: var(--chip-shadow);
+  -webkit-tap-highlight-color: transparent;
 }
-.card:hover { transform: translateY(-2px); border-color: var(--accent); }
-.card .icon { width: 72px; height: 72px; }
-.card h2 { font-size: 20px; margin: 4px 0 0; letter-spacing: -0.01em; }
-.card p { margin: 0; color: var(--muted); font-size: 15.5px; }
-.card .platform { margin-top: auto; font-size: 13.5px; color: var(--muted); }
-
-.icon { border-radius: 22%; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
-.badge {
-  display: inline-block; font-size: 13.5px; font-weight: 600;
-  color: var(--accent); background: var(--accent-soft);
-  padding: 5px 12px; border-radius: 999px;
+.theme-btn .i-moon { display: var(--show-moon); }
+.theme-btn .i-sun { display: var(--show-sun); }
+.theme-btn:focus-visible, .menu button:focus-visible, .lang:focus-visible { outline: 2px solid var(--check); outline-offset: 2px; }
+.menu {
+  position: absolute; top: 52px; right: 0; width: 230px; padding: 6px; border-radius: 18px; z-index: 20;
+  background: var(--menu-bg); border: 1px solid var(--menu-line); box-shadow: var(--menu-shadow);
+  -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%);
 }
-/* When an app is out, its badge links to the App Store. */
-a.badge { text-decoration: none; }
-a.badge:hover { color: var(--text); }
+.menu[hidden] { display: none; }
+/* An invisible bridge, so moving the mouse from the button down to the menu doesn't close it */
+.menu::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+.menu-title { font-size: 12px; font-weight: 700; color: var(--menu-faint); letter-spacing: .02em; padding: 8px 12px 6px; }
+.menu button {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 0; border-radius: 12px;
+  background: none; color: var(--text); font: inherit; font-weight: 600; font-size: 15px; line-height: 1.3; text-align: left; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu button svg { flex: none; }
+.menu .sub { display: block; font-size: 12px; font-weight: 500; color: var(--menu-faint); margin-top: 1px; }
+.menu .ck { margin-left: auto; color: var(--check); visibility: hidden; }
+.menu button[aria-checked="true"] .ck { visibility: visible; }
+.menu button.hl { background: var(--pick); color: #fff; outline: none; }
+.menu button.hl .sub { color: rgba(255,255,255,.8); }
+.menu button.hl .ck { color: #fff; }
+.menu .sep { height: 1px; background: var(--menu-sep); margin: 4px 10px; }
 
-/* App page */
-.app-head { display: flex; gap: 24px; align-items: center; padding: 56px 0 8px; }
-.app-head .icon { width: 112px; height: 112px; flex: none; }
-.app-head h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.1; letter-spacing: -0.025em; margin: 0 0 8px; }
-.app-head p { margin: 0 0 12px; color: var(--muted); font-size: 18px; }
-.links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 28px 0 8px; font-size: 15.5px; }
-.shot { margin: 28px 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
-/* Where an app's screenshots will go, until they arrive. */
+/* Quick taps on buttons never zoom the page (pinch zoom still works) */
+.theme-btn, .menu button, .lang, .brand, .pic-tabs button, .tabs button, .pill-btn, .app-row { touch-action: manipulation; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 30px 0 50px; color: var(--faint); font-size: 15px; }
+.site-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; align-items: baseline; }
+.site-footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+.site-footer .tm { flex-basis: 100%; font-size: 13px; }
+
+/* Section label, like "THE APPS" */
+.label { font-size: 14px; letter-spacing: .21em; color: var(--accent); font-weight: 800; margin: 0 0 22px; text-transform: uppercase; }
+
+/* Home: hero */
+.hero { padding: 90px 0 100px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+.hero h1 { font-size: 72px; line-height: 1.02; letter-spacing: -0.039em; font-weight: 900; margin: 0; }
+.hero h1 .wide-break { display: inline; }
+.fade { background: var(--fade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero p { font-size: 20px; color: var(--muted); margin: 22px 0 0; line-height: 1.5; max-width: 520px; }
+.icons { position: relative; width: 100%; max-width: 480px; aspect-ratio: 480 / 380; justify-self: end; }
+.icons img { position: absolute; height: auto; border-radius: 22.5%; box-shadow: var(--icon-shadow); }
+.icons .i1 { left: 0;      top: 10.5%; width: 31.25%; transform: rotate(-8deg); }
+.icons .i2 { left: 31.25%; top: 0;     width: 35.4%;  transform: rotate(6deg); }
+.icons .i3 { left: 68.75%; top: 15.8%; width: 29.2%;  transform: rotate(-4deg); }
+.icons .i4 { left: 18.75%; top: 50%;   width: 31.25%; transform: rotate(4deg); }
+.icons .i5 { left: 56.25%; top: 55.3%; width: 33.3%;  transform: rotate(-6deg); }
+
+/* Home: one wide card per app */
+.app-list { display: flex; flex-direction: column; gap: 22px; padding-bottom: 50px; }
+.app-row {
+  display: grid; grid-template-columns: 1fr 1.25fr; min-height: 300px; border-radius: 30px; overflow: hidden;
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--card-shadow);
+  color: var(--text); text-decoration: none; transition: border-color .2s ease, transform .2s ease;
+}
+.app-row:hover { border-color: var(--card-hover-line); transform: translateY(-2px); }
+.app-row:focus-visible { outline: 2px solid var(--check); outline-offset: 3px; }
+.app-row .txt { padding: 42px; display: flex; flex-direction: column; }
+.app-row .icon { width: 72px; height: 72px; border-radius: 22.5%; }
+.app-row h3 { font-size: 34px; line-height: 1.15; letter-spacing: -0.03em; font-weight: 700; margin: 22px 0 0; }
+.app-row p { color: var(--muted); font-size: 18px; line-height: 1.5; margin: 10px 0 0; max-width: 30em; }
+.meta { margin-top: auto; padding-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; font-weight: 700; color: var(--chip-text); }
+.status { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.status.soon { background: var(--soon-soft); color: var(--soon); }
+.app-row .pic { position: relative; display: flex; align-items: center; justify-content: center; padding: 28px; }
+.app-row .pic::before { content: ""; position: absolute; width: 80%; height: 80%; border-radius: 50%; background: radial-gradient(closest-side, var(--g), transparent); opacity: var(--pic-glow); }
+.app-row .pic img { position: relative; width: auto; height: auto; max-width: 100%; max-height: 260px; border-radius: 16px; box-shadow: var(--pic-shadow); }
+.app-row .pic img.phone { max-height: 300px; border-radius: 22px; }
+.app-row .pic img.big-icon { width: 190px; border-radius: 22.5%; }
+
+@media (max-width: 900px) {
+  .hero h1 { font-size: 58px; }
+}
+@media (max-width: 700px) {
+  .wrap { padding: 0 20px; }
+  .site-header .wrap { height: 64px; }
+  .hero { grid-template-columns: 1fr; gap: 28px; padding: 36px 0 64px; }
+  .hero h1 { font-size: 46px; letter-spacing: -0.035em; }
+  .hero h1 .wide-break { display: none; }
+  .hero p { font-size: 18px; margin-top: 16px; }
+  .icons { max-width: 330px; justify-self: start; }
+  .app-row { grid-template-columns: 1fr; min-height: 0; border-radius: 24px; }
+  .app-row .txt { padding: 28px 28px 8px; }
+  .app-row h3 { font-size: 28px; }
+  .app-row p { font-size: 17px; }
+  .app-row .pic { padding: 20px 28px 32px; }
+  .app-row .pic img { max-height: 220px; }
+  .app-row .pic img.phone { max-height: 280px; }
+  .app-row .pic img.big-icon { width: 150px; }
+  .site-footer .wrap { flex-direction: column; gap: 6px; }
+}
+@media (max-width: 380px) {
+  .hero h1 { font-size: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-row { transition: none; }
+  .app-row:hover { transform: none; }
+}
+
+/* Status pill used bigger on an app page (Domino: "Coming soon") */
+.status.big { font-size: 16px; padding: 10px 18px; gap: 9px; }
+.status.big::before { width: 8px; height: 8px; }
+
+/* App page: glow in the app's color at the top */
+.app-glows .gt { width: 1100px; height: 1000px; top: -560px; left: calc(50% - 550px); background: radial-gradient(closest-side, var(--g), transparent); opacity: var(--top-glow); }
+.app-glows .g2 { width: 800px; height: 800px; top: 1150px; right: -380px; background: radial-gradient(closest-side, var(--glow-blue), transparent); opacity: .6; }
+
+/* App page: top */
+.app-hero { text-align: center; padding: 64px 0 20px; }
+.icon-wrap { position: relative; display: inline-block; }
+.icon-wrap::before { content: ""; position: absolute; inset: -45%; border-radius: 50%; background: radial-gradient(closest-side, var(--g, #34d27a), transparent); opacity: var(--pic-glow); }
+.app-icon { position: relative; display: block; width: 150px; height: 150px; border-radius: 22.5%; box-shadow: var(--icon-shadow); }
+.app-hero h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.0375em; font-weight: 900; margin: 30px 0 0; }
+.tagline { font-size: 22px; line-height: 1.4; color: var(--muted); margin: 16px auto 0; max-width: 34em; }
+.devices { font-size: 15px; color: var(--faint); font-weight: 600; margin: 10px 0 0; }
+.store { margin-top: 30px; display: flex; justify-content: center; }
+/* Apple's official App Store badge, never changed: white on dark, black on light.
+   At least 40 px tall, with clear space of at least a quarter of its height all around. */
+.store-badge { display: inline-block; padding: 14px; margin: -14px; border-radius: 22px; }
+.store-badge img { height: 54px; width: auto; }
+.store-badge .badge-white { display: var(--badge-white); }
+.store-badge .badge-black { display: var(--badge-black); }
+.store-badge:focus-visible { outline: 2px solid var(--check); outline-offset: -4px; }
+.app-page .label { margin-top: 70px; }
+
+/* App page: pictures */
+.pic-tabs { display: none; gap: 8px; margin: 0 0 22px; flex-wrap: wrap; }
+.js .pic-tabs { display: flex; }
+.pic-tabs button, .tabs button {
+  font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; padding: 8px 18px; border-radius: 999px;
+  color: var(--chip-text); background: var(--chip); border: 1px solid var(--line-strong); box-shadow: var(--chip-shadow);
+  -webkit-tap-highlight-color: transparent;
+}
+.pic-tabs button[aria-selected="true"], .tabs button[aria-selected="true"] { background: var(--tab-on-bg); color: var(--tab-on-text); border-color: var(--tab-on-bg); }
+.pic-tabs button:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--check); outline-offset: 2px; }
+.panel-title { font-size: 18px; margin: 28px 0 14px; }
+.js .panel-title { display: none; }
+.phone-row {
+  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  margin: 0 -24px; padding: 4px 24px 24px; scroll-padding: 0 24px;
+}
+.phone-row img {
+  flex: none; height: 520px; width: auto; border-radius: 30px; scroll-snap-align: start;
+  border: 1px solid var(--line); box-shadow: var(--pic-shadow); background: #000;
+}
+.pic-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+.pic-card, .shot-card {
+  margin: 0; padding: 22px; border-radius: 28px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--card-shadow);
+}
+.pic-card img, .shot-card img { width: 100%; height: auto; border-radius: 16px; }
+.pic-card.tall img { max-width: 360px; margin: 0 auto; }
+.pic-card figcaption { margin-top: 14px; font-weight: 700; color: var(--chip-text); font-size: 15px; line-height: 1.4; }
+.shot-card { max-width: 920px; margin: 0 auto; }
 .shot-placeholder {
-  aspect-ratio: 16 / 9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  background: var(--surface); border: 2px dashed var(--line); color: var(--muted);
-  font-size: 15.5px; font-weight: 600;
+  aspect-ratio: 5 / 2; max-width: 920px; margin: 0 auto; border-radius: 28px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  background: var(--card); border: 2px dashed var(--line-strong); color: var(--muted); font-size: 16px; font-weight: 600;
 }
 .shot-placeholder svg { opacity: .6; }
-.features { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 12px; }
-.features li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; }
-.features b { display: block; }
 
-/* Text pages */
-.doc { max-width: 720px; padding-top: 48px; }
-.doc h1 { font-size: clamp(30px, 5vw, 40px); line-height: 1.15; letter-spacing: -0.025em; margin: 0 0 6px; }
-.doc .sub { color: var(--muted); margin: 0 0 28px; }
-.doc h2 { font-size: 21px; margin: 36px 0 8px; letter-spacing: -0.01em; }
-.doc ul { padding-left: 22px; }
-.doc li { margin: 4px 0; }
-.summary { background: var(--accent-soft); border-radius: 14px; padding: 16px 20px; margin: 0 0 8px; }
-.crumb { font-size: 15px; margin: 0 0 18px; }
-.crumb a { text-decoration: none; }
-.contact { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; margin: 8px 0 0; }
-.contact p { margin: 0 0 6px; }
-details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin: 10px 0; }
-summary { cursor: pointer; font-weight: 600; }
-details p { margin: 10px 0 2px; }
+/* App page: what it does */
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feature { background: var(--card); border: 1px solid var(--line); box-shadow: var(--card-shadow); border-radius: 26px; padding: 30px; }
+.f-icon { width: 52px; height: 52px; border-radius: 15px; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent); }
+.feature h3 { font-size: 21px; line-height: 1.25; letter-spacing: -0.015em; margin: 20px 0 0; }
+.feature p { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 8px 0 0; }
 
-@media (max-width: 560px) {
-  .app-head { flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 36px; }
-  .app-head .icon { width: 92px; height: 92px; }
-  .hero { padding-top: 44px; }
+/* App page: what it needs, with Support and Privacy Policy */
+.needs {
+  margin-top: 50px; padding: 26px 30px; border-radius: 22px; border: 1px solid var(--line); background: var(--needs-bg); box-shadow: var(--card-shadow);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px 20px; flex-wrap: wrap;
 }
+.needs p { margin: 0; color: var(--chip-text); font-size: 16px; }
+.needs-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill-btn {
+  display: inline-block; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--line-strong);
+  color: var(--text); font-weight: 700; font-size: 15px; text-decoration: none; background: var(--chip);
+}
+.pill-btn:hover { border-color: var(--card-hover-line); }
 
-/* App screenshots: a row of phone screens that scrolls sideways */
-.gallery {
-  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
-  margin: 8px -20px; padding: 8px 20px 16px; scroll-padding: 0 20px; -webkit-overflow-scrolling: touch;
-}
-.gallery figure { margin: 0; flex: 0 0 auto; scroll-snap-align: start; }
-.gallery img {
-  display: block; width: 200px; height: auto; border-radius: 28px;
-  border: 1px solid var(--line); background: #000;
-}
-/* "See pictures" button on an app page */
-.see-pictures { margin: 20px 0 8px; }
-.button {
-  display: inline-block; font-weight: 600; font-size: 15.5px; text-decoration: none;
-  color: #fff; background: var(--accent); padding: 10px 20px; border-radius: 999px;
-}
-.button:hover { filter: brightness(1.08); }
-@media (prefers-color-scheme: dark) { .button { color: #0f1a14; } }
-
-/* Pictures page: one button per device, then that device's pictures */
+/* Text pages: support, privacy, pictures, 404 (their words stay exactly the same) */
+.doc { max-width: 760px; padding-top: 40px; }
 .wide-doc { max-width: none; }
-.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 24px; }
-.tabs button {
-  font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
-  color: var(--accent); background: var(--accent-soft); border: 0;
-  padding: 8px 18px; border-radius: 999px;
-}
-.tabs button[aria-selected="true"] { color: #fff; background: var(--accent); }
-@media (prefers-color-scheme: dark) { .tabs button[aria-selected="true"] { color: #0f1a14; } }
-.tabs { display: none; }
+.doc h1 { font-size: 48px; line-height: 1.08; letter-spacing: -0.035em; font-weight: 900; margin: 0 0 10px; }
+.doc .sub { color: var(--muted); font-size: 19px; margin: 0 0 32px; }
+.doc h2 { font-size: 22px; letter-spacing: -0.015em; margin: 40px 0 12px; }
+.doc p, .doc li { color: var(--text); }
+.doc ul { padding-left: 22px; }
+.doc li { margin: 6px 0; }
+.summary { background: var(--accent-soft); border-radius: 18px; padding: 18px 22px; margin: 0 0 8px; }
+.crumb { font-size: 15px; font-weight: 600; margin: 0 0 18px; }
+.crumb a { text-decoration: none; }
+.contact { background: var(--card); border: 1px solid var(--line); box-shadow: var(--card-shadow); border-radius: 22px; padding: 24px; margin: 8px 0 0; }
+.contact p { margin: 0 0 6px; }
+details { background: var(--card); border: 1px solid var(--line); box-shadow: var(--card-shadow); border-radius: 18px; padding: 16px 20px; margin: 12px 0; }
+summary { cursor: pointer; font-weight: 700; }
+details p { margin: 10px 0 2px; color: var(--muted); }
+
+/* The separate pictures page (Make Forever QR Codes) */
+.tabs { display: none; flex-wrap: wrap; gap: 8px; margin: 8px 0 24px; }
 .js .tabs { display: flex; }
 .js .pics h2 { display: none; }
 .pics h2 { margin-top: 28px; }
 .pic-grid { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
 .pic-grid figure { margin: 0; }
-.pic-grid img { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: #000; }
+.pic-grid img { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: #000; box-shadow: var(--pic-shadow); }
 .pic-grid .phone { width: calc(50% - 8px); max-width: 220px; }
 .pic-grid .phone img { border-radius: 26px; }
 .pic-grid .wide { width: 100%; }
@@ -161,4 +401,24 @@ details p { margin: 10px 0 2px; }
 .pic-grid .tall { width: calc(50% - 8px); max-width: 360px; }
 .pic-grid .tall img { border-radius: 18px; }
 @media (min-width: 700px) { .pic-grid .wide { width: calc(50% - 8px); } }
-@media (min-width: 900px) { .gallery { justify-content: space-between; overflow-x: visible; margin: 8px 0; padding: 8px 0 16px; } .gallery img { width: 160px; border-radius: 24px; } }
+
+@media (max-width: 900px) {
+  .feature-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .app-hero { padding-top: 40px; }
+  .app-icon { width: 120px; height: 120px; }
+  .app-hero h1 { font-size: 40px; letter-spacing: -0.035em; margin-top: 24px; }
+  .tagline { font-size: 18px; }
+  .app-page .label { margin-top: 56px; }
+  .phone-row { margin: 0 -20px; padding: 4px 20px 20px; scroll-padding: 0 20px; gap: 14px; }
+  .phone-row img { height: 440px; border-radius: 26px; }
+  .pic-cards { grid-template-columns: 1fr; }
+  .pic-card, .shot-card { padding: 16px; border-radius: 24px; }
+  .shot-placeholder { aspect-ratio: 16 / 9; border-radius: 24px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature { padding: 26px; }
+  .needs { flex-direction: column; align-items: flex-start; padding: 24px; }
+  .doc { padding-top: 24px; }
+  .doc h1 { font-size: 36px; }
+}
