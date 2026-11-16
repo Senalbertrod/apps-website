@@ -183,7 +183,7 @@ main, .site-header, .site-footer { position: relative; z-index: 1; }
 }
 .theme-btn .i-moon { display: var(--show-moon); }
 .theme-btn .i-sun { display: var(--show-sun); }
-.theme-btn:focus-visible, .menu button:focus-visible, .lang:focus-visible { outline: 2px solid var(--check); outline-offset: 2px; }
+.theme-btn:focus-visible, .menu button:focus-visible, .menu a:focus-visible, .lang:focus-visible { outline: 2px solid var(--check); outline-offset: 2px; }
 .menu {
   position: absolute; top: 52px; right: 0; width: 230px; padding: 6px; border-radius: 18px; z-index: 20;
   background: var(--menu-bg); border: 1px solid var(--menu-line); box-shadow: var(--menu-shadow);
@@ -193,22 +193,36 @@ main, .site-header, .site-footer { position: relative; z-index: 1; }
 /* An invisible bridge, so moving the mouse from the button down to the menu doesn't close it */
 .menu::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
 .menu-title { font-size: 12px; font-weight: 700; color: var(--menu-faint); letter-spacing: .02em; padding: 8px 12px 6px; }
-.menu button {
+.menu button, .menu a {
   display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border: 0; border-radius: 12px;
   background: none; color: var(--text); font: inherit; font-weight: 600; font-size: 15px; line-height: 1.3; text-align: left; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.menu button svg { flex: none; }
+.menu button svg, .menu a svg { flex: none; }
+.menu a { text-decoration: none; }
 .menu .sub { display: block; font-size: 12px; font-weight: 500; color: var(--menu-faint); margin-top: 1px; }
 .menu .ck { margin-left: auto; color: var(--check); visibility: hidden; }
-.menu button[aria-checked="true"] .ck { visibility: visible; }
-.menu button.hl { background: var(--pick); color: #fff; outline: none; }
+.menu button[aria-checked="true"] .ck, .menu a[aria-checked="true"] .ck { visibility: visible; }
+.menu button.hl, .menu a.hl { background: var(--pick); color: #fff; outline: none; }
 .menu button.hl .sub { color: rgba(255,255,255,.8); }
-.menu button.hl .ck { color: #fff; }
+.menu button.hl .ck, .menu a.hl .ck { color: #fff; }
 .menu .sep { height: 1px; background: var(--menu-sep); margin: 4px 10px; }
 
 /* Quick taps on buttons never zoom the page (pinch zoom still works) */
-.theme-btn, .menu button, .lang, .brand, .pic-tabs button, .tabs button, .pill-btn, .app-row { touch-action: manipulation; }
+.theme-btn, .menu button, .menu a, .lang, .brand, .pic-tabs button, .tabs button, .pill-btn, .app-row { touch-action: manipulation; }
+
+/* Language menu (WatchTamer pages only: English, Español, 日本語). The globe shows the page's language. */
+.langs { position: relative; }
+button.lang { font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.langs .menu { width: 200px; }
+/* Without JavaScript the menu still opens on hover or keyboard focus. */
+html:not(.js) .langs:hover .menu, html:not(.js) .langs:focus-within .menu { display: block; }
+
+/* Japanese pages: Japanese fonts, and headings only break between phrases (marked with <wbr>). */
+html:lang(ja) body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "SF Pro Text", "Segoe UI", sans-serif; }
+:lang(ja) h1, :lang(ja) h2, :lang(ja) h3, :lang(ja) .tagline, :lang(ja) summary { word-break: keep-all; overflow-wrap: anywhere; }
+:lang(ja) .doc h1, :lang(ja) .feature h3 { letter-spacing: -0.01em; }
+:lang(ja) .label { letter-spacing: .12em; }
 
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); margin-top: 40px; padding: 30px 0 50px; color: var(--faint); font-size: 15px; }

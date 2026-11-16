@@ -6,3 +6,6 @@ Website-Redesign-for-Claude-Code/
 
 # Hidden files the Mac makes by itself.
 .DS_Store
+
+# Apple badge downloads (the needed badges are copied into assets/img). Never uploaded.
+download-on-the-app-store-*/

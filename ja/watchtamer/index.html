@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WatchTamer · Apple Watchのバーチャルペット恐竜</title>
+<meta name="description" content="Apple Watchで育てる、90年代風のバーチャルペット恐竜。">
+<link rel="icon" href="../../assets/img/favicon.png">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=afe20e0f">
+<script src="../../assets/site.js?v=dca14633" defer></script>
+<link rel="alternate" hreflang="en" href="https://apps.senalbert.com/watchtamer/">
+<link rel="alternate" hreflang="es" href="https://apps.senalbert.com/es/watchtamer/">
+<link rel="alternate" hreflang="ja" href="https://apps.senalbert.com/ja/watchtamer/">
+<link rel="alternate" hreflang="x-default" href="https://apps.senalbert.com/watchtamer/">
+</head>
+<body>
+<div class="glows app-glows" aria-hidden="true" style="--g:#9bd14a"><i class="gt"></i><i class="g2"></i></div>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="/"><span aria-hidden="true">&lsaquo; </span>Apps</a>
+<div class="header-right">
+<div class="appearance">
+<button class="theme-btn" type="button" aria-label="外観" aria-haspopup="menu" aria-expanded="false" aria-controls="appearance-menu">
+<svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+<svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+</button>
+<div class="menu" id="appearance-menu" role="menu" aria-label="外観" hidden>
+<div class="menu-title" aria-hidden="true">外観</div>
+<button type="button" role="menuitemradio" aria-checked="true" data-choice="auto" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg><span>自動<span class="sub">設定に合わせる</span></span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<div class="sep" role="separator"></div>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="light" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><span>ライト</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+<button type="button" role="menuitemradio" aria-checked="false" data-choice="dark" tabindex="-1"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg><span>ダーク</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+</div>
+</div>
+<div class="langs">
+<button class="lang lang-btn" type="button" aria-label="言語: 日本語" aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg><span>日本語</span></button>
+<div class="menu" id="language-menu" role="menu" aria-label="言語" hidden>
+<div class="menu-title" aria-hidden="true">言語</div>
+<a role="menuitemradio" aria-checked="false" href="/watchtamer/" hreflang="en" lang="en" tabindex="-1"><span>English</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a><a role="menuitemradio" aria-checked="false" href="/es/watchtamer/" hreflang="es" lang="es" tabindex="-1"><span>Español</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a><a role="menuitemradio" aria-checked="true" href="/ja/watchtamer/" hreflang="ja" lang="ja" tabindex="-1"><span>日本語</span><svg class="ck" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></a>
+</div>
+</div>
+</div>
+</div></header>
+<main class="wrap app-page" style="--g:#9bd14a">
+<section class="app-hero">
+<div class="icon-wrap"><img class="app-icon" src="../../assets/img/watchtamer-icon.png" alt="WatchTamerのアイコン" width="150" height="150"></div>
+<h1>WatchTamer</h1>
+<p class="tagline">Apple Watchで育てる、<wbr>90年代風の<wbr>バーチャルペット恐竜。</p>
+<p class="devices">Apple Watch</p>
+<div class="store">
+<a class="store-badge" href="https://apps.apple.com/jp/app/watchtamer/id6828227034"><img class="badge-white" src="../../assets/img/badge-ja-white-v1.svg" alt="App Storeからダウンロード" width="147" height="54"><img class="badge-black" src="../../assets/img/badge-ja-black-v1.svg" alt="App Storeからダウンロード" width="147" height="54"></a>
+</div>
+</section>
+
+<h2 class="label">画像</h2>
+<figure class="shot-card"><img src="../../assets/img/watchtamer-shot-ja-v1.jpg" alt="WatchTamerの恐竜たち" width="1400" height="1098"></figure>
+
+<h2 class="label">できること</h2>
+<div class="feature-grid">
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3.6 0-6.5 5.4-6.5 10a6.5 6.5 0 0 0 13 0C18.5 8.4 15.6 3 12 3z"/><path d="M8.5 13.5l2 1.5 2-2 2 1.5 1.5-1"/></svg></div><h3>恐竜を<wbr>育てる</h3><p>卵をかえして、ごはんをあげて、フンをそうじして、成長していく姿をすべての段階で見守りましょう。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2.5-6.5L15 17v4M8 11.5l3-3.5 3.5 1.5 2 3.5M12.5 14.5l-1.5-4"/></svg></div><h3>歩いて<wbr>ごはんと<wbr>トレーニング</h3><p>歩くだけでOKです。1,000歩ごとに恐竜にごはん、2,000歩ごとにプロテイン、3,000歩ごとにトレーニング1回になります。アプリを閉じているあいだも有効です。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="5" rx="1.5"/><rect x="4" y="10.5" width="16" height="5" rx="1.5"/><path d="M8 19.5h8"/></svg></div><h3>トレーニングの<wbr>ストック</h3><p>1日に5,000歩歩くごとに、トレーニングを1回分ためておけます（最大4回）。TRAINメニューのRESERVEから、いつでも使えます。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l9 9M4 4h3.5L14 10.5M20 4l-9 9M20 4h-3.5L10 10.5M7 15l-3 3 2 2 3-3M17 15l3 3-2 2-3-3"/></svg></div><h3>友だちと<wbr>バトル</h3><p>短いバトルコードを交換すると、2台のApple Watchで同じバトルが再生されます。インターネットは必要ありません。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M7 16v-5M12 16V6M17 16v-8"/></svg></div><h3>手ごわくなる<wbr>CPUバトル</h3><p>CPUに連勝するたびに、次の相手が強くなります（最高LEVEL 11）。負けるとLEVEL 1からやり直しです。連勝記録はステータスのBATTLESページで確認できます。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 0 1 13-5.1M19.5 12a7.5 7.5 0 0 1-13 5.1"/><path d="M17.5 3v4h-4M6.5 21v-4h4"/></svg></div><h3>進化<wbr>シーン</h3><p>恐竜が進化するとき、前の姿と新しい姿がどんどん速く入れかわり、画面が光ったあと、新しい恐竜がキラキラと名前と一緒に現れます。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></div><h3>レアな<wbr>卵</h3><p>新しい卵はどれも運しだいです。いちばんレアな卵からは、T-RexかRaptorが生まれます。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg></div><h3>やさしい<wbr>お知らせ</h3><p>恐竜がおなかをすかせたとき、弱ったとき、そうじが必要なときに通知でお知らせします（オン・オフを選べます）。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6l.6-3h4.8l.6 3M9 18l.6 3h4.8l.6-3M12 9.5V12l1.5 1"/></svg></div><h3>文字盤にも<wbr>表示</h3><p>コンプリケーションに、恐竜がいまいちばん必要としているもの（薬、ごはん、そうじ、プロテイン）が表示されます。すべて順調なときは恐竜が表示されます。アプリを閉じていても最新の状態に保たれます。</p></div>
+<div class="feature"><div class="f-icon"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9M12 3c-2.5 2.7-3.8 5.7-3.8 9s1.3 6.3 3.8 9"/></svg></div><h3>英語と<wbr>スペイン語に<wbr>対応</h3><p>Apple Watchの言語がスペイン語ならスペイン語で、それ以外は英語で表示されます。</p></div>
+</div>
+
+<div class="needs">
+<p>watchOS 26.4以降を搭載したApple Watchが必要です。iPhoneアプリは必要ありません。</p>
+<div class="needs-links"><a class="pill-btn" href="support/">サポート</a><a class="pill-btn" href="privacy/">プライバシーポリシー</a></div>
+</div>
+</main>
+<footer class="site-footer"><div class="wrap">
+<span>&copy; 2026 Senalbert Rodriguez &middot; Florida, United States</span>
+<a href="mailto:support@senalbert.com">support@senalbert.com</a>
+</div></footer>
+</body>
+</html>

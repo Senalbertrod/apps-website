@@ -1,6 +1,8 @@
 // The Appearance menu: Automatic (follows the iPhone or computer setting), Light or Dark.
 // The choice is kept only in this browser (localStorage "theme"): no cookies, nothing sent anywhere.
 // A tiny script in each page's <head> applies it before the page draws, so the colors never flash.
+// The same code runs the language menu on the WatchTamer pages (English, Español, 日本語):
+// its options are plain links to the same page in each language.
 (function () {
   var root = document.documentElement;
   var KEY = 'theme';
@@ -26,13 +28,15 @@
   var boxes = [];
 
   function setup(box) {
-    var btn = box.querySelector('.theme-btn');
+    var isLang = box.classList.contains('langs');
+    var btn = box.querySelector('.theme-btn, .lang-btn');
     var menu = box.querySelector('.menu');
     var items = [].slice.call(menu.querySelectorAll('[role="menuitemradio"]'));
     var openedBy = null;   // 'hover', 'click' or 'key'
     var closeTimer = null;
 
     function mark() {
+      if (isLang) return;   // the current language is marked in the page itself
       var t = stored();
       items.forEach(function (it) { it.setAttribute('aria-checked', it.dataset.choice === t ? 'true' : 'false'); });
     }
@@ -74,7 +78,7 @@
       mark();
       close(byKey);
     }
-    var api = { close: close, mark: mark };
+    var api = { close: close, mark: mark, box: box };
     boxes.push(api);
 
     // Tap or click on the button. A click from the keyboard (Enter or Space) has detail 0.
@@ -108,7 +112,7 @@
       it.addEventListener('mouseenter', function () { highlight(it, openedBy === 'key'); });
       // A finger on an option highlights it in blue, like the mouse does.
       it.addEventListener('pointerdown', function () { highlight(it, false); });
-      it.addEventListener('click', function (e) { choose(it, e.detail === 0); });
+      it.addEventListener('click', function (e) { if (!isLang) choose(it, e.detail === 0); });
     });
     menu.addEventListener('mouseleave', function () { if (openedBy !== 'key') highlight(null); });
 
@@ -158,11 +162,12 @@
   }
 
   function start() {
-    [].forEach.call(document.querySelectorAll('.appearance'), setup);
+    [].forEach.call(document.querySelectorAll('.appearance, .langs'), setup);
     [].forEach.call(document.querySelectorAll('.pic-tabs'), setupTabs);
     // Close on a click or tap anywhere outside the menu.
     document.addEventListener('pointerdown', function (e) {
-      if (!e.target.closest || !e.target.closest('.appearance')) boxes.forEach(function (b) { b.close(false); });
+      var inside = e.target.closest && e.target.closest('.appearance, .langs');
+      boxes.forEach(function (b) { if (!inside || !inside.contains(b.box)) b.close(false); });
     });
     // If the choice changes in another tab, follow it here too.
     window.addEventListener('storage', function (e) {
